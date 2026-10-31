@@ -9,14 +9,28 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- CSS ARCHITETTONICO MINIMALISTA (ZERO EMOJI, ZERO TAGLI) ---
+# --- CSS ARCHITETTONICO: BOTTONI AD ALTO CONTRASTO & CONTROLLO IN CIMA ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-/* Nasconde l'header bianco di Streamlit che copriva il banner */
 header[data-testid="stHeader"] {
     background: transparent !important;
+}
+
+/* FRECCINA MENU LATERALE SEMPRE EVIDENTE E LUMINOSA */
+button[data-testid="collapsedControl"],
+[data-testid="stSidebarCollapsedControl"] button {
+    background-color: #0284c7 !important;
+    color: #ffffff !important;
+    border: 2px solid #38bdf8 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.6) !important;
+}
+button[data-testid="collapsedControl"] svg,
+[data-testid="stSidebarCollapsedControl"] svg {
+    fill: #ffffff !important;
+    color: #ffffff !important;
 }
 
 .stApp {
@@ -26,122 +40,141 @@ header[data-testid="stHeader"] {
 }
 
 .block-container {
-    padding-top: 2.8rem !important;
+    padding-top: 2.2rem !important;
     padding-bottom: 2rem !important;
     max-width: 1400px !important;
 }
 
-/* INTESTAZIONE PULITA */
+/* INTESTAZIONE */
 .top-bar {
     border-bottom: 1px solid #1e293b;
-    padding-bottom: 12px;
-    margin-bottom: 18px;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     flex-wrap: wrap;
 }
 .brand-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     color: #f8fafc;
     text-transform: uppercase;
 }
 .brand-title span {
     color: #38bdf8;
     font-family: 'JetBrains Mono', monospace;
-    font-weight: 500;
+    font-weight: 600;
 }
 .brand-sub {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    color: #64748b;
-    letter-spacing: 0.05em;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    letter-spacing: 0.04em;
 }
 
 /* STRISCIA KPI TECNICA */
 .kpi-bar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 18px;
 }
 .kpi-box {
     background: #0f172a;
     border: 1px solid #1e293b;
     border-left: 3px solid #38bdf8;
     border-radius: 4px;
-    padding: 10px 14px;
+    padding: 9px 12px;
 }
 .kpi-lbl {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
-    color: #64748b;
+    font-size: 0.66rem;
+    color: #94a3b8;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
 }
 .kpi-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: #f8fafc;
     margin-top: 2px;
 }
 
-/* BANNER ALLERTE SOBRI E LEGGIBILI */
+/* BANNER ALLERTE */
 .alert-bar-sos {
     background: #1e1b18;
     border: 1px solid #d97706;
     border-left: 4px solid #f59e0b;
     color: #fde68a;
-    padding: 10px 16px;
+    padding: 10px 14px;
     border-radius: 4px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 .alert-bar-crit {
     background: #231215;
     border: 1px solid #dc2626;
     border-left: 4px solid #ef4444;
     color: #fecaca;
-    padding: 10px 16px;
+    padding: 10px 14px;
     border-radius: 4px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
-/* CARD NODI: NESSUNA ALTEZZA BLOCCATA CHE TAGLIA IL TESTO, STILE ARCHITETTONICO */
+/* BOTTONI SECONDARI (ES. TORNA ALLA COSTELLAZIONE, CONFERMA PIN): AZZURRI AD ALTO CONTRASTO! */
+div.stButton > button[kind="secondary"] {
+    background: linear-gradient(90deg, #0284c7 0%, #0369a1 100%) !important;
+    color: #ffffff !important;
+    border: 1.5px solid #38bdf8 !important;
+    border-radius: 6px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    padding: 10px 18px !important;
+    letter-spacing: 0.04em !important;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35) !important;
+}
+div.stButton > button[kind="secondary"] p {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+div.stButton > button[kind="secondary"]:hover {
+    background: #0ea5e9 !important;
+    border-color: #ffffff !important;
+}
+
+/* CARD NODI DELLA COSTELLAZIONE (BOTTONI PRIMARI) */
 div.stButton > button[kind="primary"] {
     background: #0f172a !important;
     border: 1px solid #1e293b !important;
-    border-top: 2px solid #334155 !important;
+    border-top: 2px solid #38bdf8 !important;
     border-radius: 6px !important;
     height: auto !important;
-    min-height: 118px !important;
+    min-height: 115px !important;
     width: 100% !important;
-    padding: 16px 18px !important;
+    padding: 15px 18px !important;
     text-align: left !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
     align-items: flex-start !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
-    transition: all 0.15s ease !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     margin-bottom: 6px !important;
 }
 div.stButton > button[kind="primary"]:hover {
-    background: #131f38 !important;
+    background: #16243d !important;
     border-color: #38bdf8 !important;
-    border-top: 2px solid #38bdf8 !important;
 }
 div.stButton > button[kind="primary"] p {
     white-space: pre-line !important;
     line-height: 1.55 !important;
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.80rem !important;
+    font-size: 0.78rem !important;
     font-weight: 500 !important;
     color: #cbd5e1 !important;
     margin: 0 !important;
@@ -152,7 +185,6 @@ div.stButton > button[kind="primary"] p::first-line {
     font-size: 0.95rem !important;
     font-weight: 700 !important;
     color: #ffffff !important;
-    letter-spacing: 0.02em !important;
 }
 
 /* MATRICE QUADRETTI HACCP INTERNA */
@@ -170,20 +202,22 @@ div.stButton > button[kind="primary"] p::first-line {
 .tile-val    { font-size: 1.05rem; font-weight: 700; margin: 4px 0; }
 .tile-slots  { font-size: 0.65rem; color: #94a3b8; display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 4px; }
 
-/* RESPONSIVE SMARTPHONE: 1 COLONNA LARGA E PULITA, MAI TESTO MOZZATO */
+/* Etichette input visibili su sfondo scuro */
+label, .stRadio label, .stSelectbox label, .stTextInput label {
+    color: #cbd5e1 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 0.78rem !important;
+}
+
 @media (max-width: 768px) {
     .block-container {
-        padding-top: 2.4rem !important;
+        padding-top: 1.6rem !important;
         padding-left: 0.8rem !important;
         padding-right: 0.8rem !important;
     }
     .kpi-bar {
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
-    }
-    div.stButton > button[kind="primary"] {
-        min-height: 92px !important;
-        padding: 12px 14px !important;
     }
     .haccp-tile {
         width: 48% !important;
@@ -349,34 +383,54 @@ store = get_shared_store()
 
 if "selected_node_id" not in st.session_state:
     st.session_state.selected_node_id = None
+if "active_pin" not in st.session_state:
+    st.session_state.active_pin = "9999"
 if "last_sos_count" not in st.session_state:
     st.session_state.last_sos_count = len(store["sos_queue"])
 if "last_alarm_counter" not in st.session_state:
     st.session_state.last_alarm_counter = store["alarm_counter"]
 
-# --- BARRA LATERALE ---
-with st.sidebar:
-    st.markdown("### S.K.A. // BOSCHETTO PRO")
-    pin_input = st.text_input("PIN Operativo", value="9999", help="9999 = Direzione | 1001 = Dipendente | 0000 = Architetto")
-    if st.button("Aggiorna Stato Live", use_container_width=True):
+# --- INTESTAZIONE + BARRA DI COMANDO RAPIDA DIRETTAMENTE IN CIMA (ZERO BISOGNO DEL PANNELLO LATERALE) ---
+st.markdown("""
+<div class="top-bar">
+    <div class="brand-title">SOVEREIGN KINETIC ARCHITECTURE <span>// BOSCHETTO PRO</span></div>
+    <div class="brand-sub">BEMASK COMMAND SYSTEM · ZERO-TRACE PROTOCOL</div>
+</div>
+""", unsafe_allow_html=True)
+
+# Barra di controllo immediata visibile sia su PC che su Smartphone senza aprire il menu laterale
+c_pin, c_btn, c_refresh, c_sonar = st.columns([1.3, 1.1, 1.1, 1.2])
+with c_pin:
+    new_pin = st.text_input("PIN ACCESSO (9999 Dir. | 1001 Staff)", value=st.session_state.active_pin, label_visibility="collapsed", placeholder="PIN (es. 9999 o 1001)")
+with c_btn:
+    if st.button("CONFERMA PIN ↵", type="secondary", use_container_width=True) or (new_pin != st.session_state.active_pin):
+        st.session_state.active_pin = new_pin.strip()
+        st.session_state.selected_node_id = None
+        play_tactical_sonar("ping")
+        st.toast(f"Accesso confermato: PIN {st.session_state.active_pin}")
         st.rerun()
+with c_refresh:
+    if st.button("AGGIORNA LIVE ↻", type="secondary", use_container_width=True):
+        st.toast("Sincronizzazione completata")
+        st.rerun()
+with c_sonar:
+    sonar_active = st.toggle("SONAR AUDIO URGENZE", value=False)
 
-    st.divider()
-    st.caption("SONAR TATTICO")
-    sonar_active = st.toggle("Attiva Sonar Urgenze", value=False)
-    if sonar_active:
-        c_s1, c_s2 = st.columns(2)
-        if c_s1.button("Test Ping"): play_tactical_sonar("ping")
-        if c_s2.button("Test Allarme"): play_tactical_sonar("alarm")
+pin_input = st.session_state.active_pin
 
-    st.divider()
-    st.caption("PONTI ECOSISTEMA BEMASK")
+# --- BARRA LATERALE OPZIONALE (SOLO PONTI ECOSISTEMA) ---
+with st.sidebar:
+    st.markdown("### PONTI ECOSISTEMA BEMASK")
+    st.caption("I controlli principali di PIN e Aggiornamento sono ora direttamente in cima alla pagina.")
     hook_sz = st.toggle("Sovereign Zero (Hotel)", value=True)
     hook_lz = st.toggle("LAZERS (F&B Engine)", value=True)
     if hook_sz:
         st.caption("Sovereign Zero: 112 Pax in Casa")
     if hook_lz:
         st.caption("LAZERS: 3 Linee Colazione | 38 HB | 3 Celiaci")
+    st.divider()
+    if st.button("Test Ping Audio"): play_tactical_sonar("ping")
+    if st.button("Test Allarme Grave"): play_tactical_sonar("alarm")
 
 # --- CONTROLLO SONAR AUTOMATICO ---
 if sonar_active:
@@ -394,14 +448,6 @@ st.session_state.last_alarm_counter = store["alarm_counter"]
 if pin_input in ["9999", "0000"]:
     is_architect = (pin_input == "0000")
 
-    # INTESTAZIONE SOBRIA E PROFESSIONALE
-    st.markdown("""
-    <div class="top-bar">
-        <div class="brand-title">SOVEREIGN KINETIC ARCHITECTURE <span>// BOSCHETTO PRO</span></div>
-        <div class="brand-sub">BEMASK COMMAND SYSTEM · ZERO-TRACE PROTOCOL</div>
-    </div>
-    """, unsafe_allow_html=True)
-
     if is_architect:
         st.info("MODALITÀ MASTER ARCHITECT ATTIVA (PIN 0000) — Modifica strutturale abilitata.")
 
@@ -414,7 +460,7 @@ if pin_input in ["9999", "0000"]:
         st.markdown(f"<div class='alert-bar-sos'>LOGISTICA SOS ATTIVO ({len(store['sos_queue'])}) — {latest_sos['from']} [{latest_sos['time']}]: {latest_sos['item']}</div>", unsafe_allow_html=True)
 
     # --------------------------------------------------------------------------
-    # LIVELLO 0: LA GRIGLIA DEI NODI (PULIZIA ASSOLUTA, ZERO EMOJI)
+    # LIVELLO 0: LA COSTELLAZIONE DEI NODI
     # --------------------------------------------------------------------------
     if st.session_state.selected_node_id is None:
         tot_fig = len(store["figurine"])
@@ -443,7 +489,6 @@ if pin_input in ["9999", "0000"]:
             n_fridges = [v for v in store["haccp_state"].values() if v["node_id"] == nid]
 
             n_ok = sum(1 for f in n_fridges if f["status"] == "GREEN")
-            n_wait = sum(1 for f in n_fridges if f["status"] == "PURPLE")
             n_anom = sum(1 for f in n_fridges if f["status"] in ["YELLOW", "RED"])
 
             if not n_fridges:
@@ -480,7 +525,7 @@ if pin_input in ["9999", "0000"]:
     # VISTA 08: REGIA MULTI-EVENTO & CASSAFORTE 03:00 AM
     # --------------------------------------------------------------------------
     elif st.session_state.selected_node_id == "HUB_VAULT":
-        if st.button("← TORNA ALLA PLANCIA PRINCIPALE"):
+        if st.button("⬅ TORNA ALLA COSTELLAZIONE PRINCIPALE", type="secondary", use_container_width=True):
             st.session_state.selected_node_id = None
             st.rerun()
 
@@ -515,7 +560,7 @@ if pin_input in ["9999", "0000"]:
                 use_container_width=True
             )
         with c_v2:
-            if st.button("RESET NUOVO GIRO HACCP (RIPORTA IN ATTESA)", use_container_width=True):
+            if st.button("RESET NUOVO GIRO HACCP (RIPORTA IN ATTESA)", type="secondary", use_container_width=True):
                 for k in store["haccp_state"]:
                     store["haccp_state"][k].update({"status": "PURPLE", "label": "ATTESA", "by": "-", "time": "--:--"})
                 st.rerun()
@@ -527,7 +572,7 @@ if pin_input in ["9999", "0000"]:
         nid = st.session_state.selected_node_id
         node = next(n for n in store["nodes"] if n["id"] == nid)
 
-        if st.button("← TORNA ALLA PLANCIA PRINCIPALE"):
+        if st.button("⬅ TORNA ALLA COSTELLAZIONE PRINCIPALE", type="secondary", use_container_width=True):
             st.session_state.selected_node_id = None
             st.rerun()
 
@@ -562,7 +607,7 @@ if pin_input in ["9999", "0000"]:
                 with st.expander("[ARCHITETTO] Aggiungi Unità Frigorifera"):
                     nf_name = st.text_input("Denominazione Unità")
                     nf_kind = st.selectbox("Regime Termico", ["POS (+2°C / +6°C)", "NEG (-18°C)"])
-                    if st.button("Inserisci nel Reparto"):
+                    if st.button("Inserisci nel Reparto", type="secondary"):
                         if nf_name:
                             k_code = "POS" if "POS" in nf_kind else "NEG"
                             node["fridges"].append({"name": nf_name, "kind": k_code})
@@ -589,7 +634,7 @@ if pin_input in ["9999", "0000"]:
                 pick_fig = st.selectbox("Operatore", [f["nick"] for f in store["figurine"]])
                 pick_sub = st.selectbox("Sottozona", node["sub_zones"])
                 pick_sh = st.selectbox("Turno", ["Mattina (07-15)", "Pranzo/Pom (12-20)", "Cena/Sera (18-02)"])
-                if st.button("Conferma Assegnazione"):
+                if st.button("Conferma Assegnazione", type="secondary"):
                     for f in store["figurine"]:
                         if f["nick"] == pick_fig:
                             f["node_id"] = nid
@@ -602,7 +647,7 @@ if pin_input in ["9999", "0000"]:
                 st.markdown("##### RICHIESTE SOS ATTIVE")
                 for req in node_sos:
                     st.warning(f"{req['time']} — {req['item']}")
-                if st.button("Segna Richieste SOS come Evase", use_container_width=True):
+                if st.button("Segna Richieste SOS come Evase", type="secondary", use_container_width=True):
                     store["sos_queue"] = [s for s in store["sos_queue"] if s["node_id"] != nid]
                     st.rerun()
 
@@ -612,11 +657,12 @@ if pin_input in ["9999", "0000"]:
 else:
     user = next((f for f in store["figurine"] if f["pin"] == pin_input), None)
     if not user:
-        st.error("PIN non riconosciuto. Inserire 9999 (Direzione) o 1001 (Operatore).")
+        st.error(f"PIN '{pin_input}' non riconosciuto. Inserisci 9999 (Direzione) o 1001..1006 (Operatori) nella casella in alto.")
     else:
         user_node = next(n for n in store["nodes"] if n["id"] == user["node_id"])
-        st.markdown(f"### OPERATORE: {user['nick']} // [{user_node['code']}] {user_node['name']}")
-        st.caption(f"SOTTOZONA: {user['sub_zone']}   |   TURNO: {user['shift']}")
+        st.success(f"SESSIONE OPERATORE ATTIVA: {user['nick']} ({user['role']}) — Per tornare in Direzione digita 9999 in alto.")
+        st.markdown(f"### {user_node['code']} // {user_node['name']} — {user['sub_zone']}")
+        st.caption(f"TURNO ASSEGNATO: {user['shift']}")
         st.divider()
 
         st.markdown("##### 1. REGISTRAZIONE TEMPERATURA HACCP")
@@ -625,25 +671,26 @@ else:
 
         my_fridges = [k for k, v in store["haccp_state"].items() if v["node_id"] == user["node_id"]]
         if my_fridges:
-            sel_key = st.selectbox("Seleziona Unità", my_fridges, format_func=lambda x: x.split(" || ")[1])
+            sel_key = st.selectbox("Seleziona Unità Frigorifera", my_fridges, format_func=lambda x: x.split(" || ")[1])
             fr_info = store["haccp_state"][sel_key]
             default_t = 3.0 if fr_info["kind"] == "POS" else -19.0
             temp_val = st.slider("Temperatura Rilevata (°C)", -28.0, 15.0, default_t, 0.5)
             is_broken = st.checkbox("Segnala Anomalia Blocco / Guasto Meccanico")
 
-            if st.button("FIRMA E REGISTRA LETTURA", use_container_width=True):
+            if st.button("FIRMA E REGISTRA LETTURA", type="secondary", use_container_width=True):
                 status_color, label_text = evaluate_fridge_status(fr_info["kind"], temp_val, is_broken)
                 slot_txt = {"GREEN": "OK", "YELLOW": "WARN", "RED": "CRIT"}[status_color]
                 fr_info["slots"][round_code] = slot_txt
                 fr_info.update({"status": status_color, "label": label_text, "by": user["nick"], "time": datetime.now().strftime("%H:%M")})
                 if status_color in ["RED", "YELLOW"]:
                     store["alarm_counter"] += 1
+                st.toast(f"Temperatura {label_text} registrata!")
                 st.success(f"Registrato ({round_code}): {label_text}")
 
         st.divider()
         st.markdown("##### 2. RICHIESTA URGENTE MAGAZZINO (SOS)")
         sos_item = st.text_input("Articolo / Fornitura richiesta:")
-        if st.button("INVIA RICHIESTA AL MAGAZZINO", use_container_width=True):
+        if st.button("INVIA RICHIESTA AL MAGAZZINO", type="secondary", use_container_width=True):
             if sos_item:
                 store["sos_queue"].append({
                     "time": datetime.now().strftime("%H:%M"),
@@ -652,5 +699,5 @@ else:
                     "item": sos_item,
                     "status": "Richiesto"
                 })
-                st.success("Richiesta trasmessa.")
-                
+                st.toast("SOS inviato al Magazzino!")
+                st.success("Richiesta trasmessa in Direzione e al Magazzino.")
