@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- CSS ARCHITETTONICO: BOTTONI AD ALTO CONTRASTO & CONTROLLO IN CIMA ---
+# --- CSS ARCHITETTONICO: PULIZIA, ALTO CONTRASTO E PRATICITÀ ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -18,19 +18,12 @@ header[data-testid="stHeader"] {
     background: transparent !important;
 }
 
-/* FRECCINA MENU LATERALE SEMPRE EVIDENTE E LUMINOSA */
 button[data-testid="collapsedControl"],
 [data-testid="stSidebarCollapsedControl"] button {
     background-color: #0284c7 !important;
     color: #ffffff !important;
     border: 2px solid #38bdf8 !important;
     border-radius: 8px !important;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.6) !important;
-}
-button[data-testid="collapsedControl"] svg,
-[data-testid="stSidebarCollapsedControl"] svg {
-    fill: #ffffff !important;
-    color: #ffffff !important;
 }
 
 .stApp {
@@ -40,7 +33,7 @@ button[data-testid="collapsedControl"] svg,
 }
 
 .block-container {
-    padding-top: 2.2rem !important;
+    padding-top: 2.0rem !important;
     padding-bottom: 2rem !important;
     max-width: 1400px !important;
 }
@@ -69,17 +62,17 @@ button[data-testid="collapsedControl"] svg,
 }
 .brand-sub {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: #94a3b8;
-    letter-spacing: 0.04em;
+    font-size: 0.75rem;
+    color: #38bdf8;
+    letter-spacing: 0.03em;
 }
 
-/* STRISCIA KPI TECNICA */
+/* STRISCIA KPI TECNICA (5 INDICATORI CON PRESENZE HOTEL LIVE) */
 .kpi-bar {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 .kpi-box {
     background: #0f172a;
@@ -90,19 +83,30 @@ button[data-testid="collapsedControl"] svg,
 }
 .kpi-lbl {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.66rem;
+    font-size: 0.65rem;
     color: #94a3b8;
     text-transform: uppercase;
 }
 .kpi-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.05rem;
+    font-size: 1.0rem;
     font-weight: 700;
     color: #f8fafc;
     margin-top: 2px;
 }
 
-/* BANNER ALLERTE */
+/* BANNER DISPACCI & ALLERTE */
+.dispatch-bar {
+    background: #0c192c;
+    border: 1px solid #0284c7;
+    border-left: 4px solid #38bdf8;
+    color: #e0f2fe;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.80rem;
+    margin-bottom: 12px;
+}
 .alert-bar-sos {
     background: #1e1b18;
     border: 1px solid #d97706;
@@ -112,7 +116,7 @@ button[data-testid="collapsedControl"] svg,
     border-radius: 4px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 }
 .alert-bar-crit {
     background: #231215;
@@ -123,10 +127,10 @@ button[data-testid="collapsedControl"] svg,
     border-radius: 4px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 }
 
-/* BOTTONI SECONDARI (ES. TORNA ALLA COSTELLAZIONE, CONFERMA PIN): AZZURRI AD ALTO CONTRASTO! */
+/* BOTTONI SECONDARI: AZZURRO VIVO E TESTO BIANCO */
 div.stButton > button[kind="secondary"] {
     background: linear-gradient(90deg, #0284c7 0%, #0369a1 100%) !important;
     color: #ffffff !important;
@@ -134,10 +138,9 @@ div.stButton > button[kind="secondary"] {
     border-radius: 6px !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-weight: 700 !important;
-    font-size: 0.85rem !important;
-    padding: 10px 18px !important;
-    letter-spacing: 0.04em !important;
-    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35) !important;
+    font-size: 0.84rem !important;
+    padding: 10px 16px !important;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3) !important;
 }
 div.stButton > button[kind="secondary"] p {
     color: #ffffff !important;
@@ -148,14 +151,14 @@ div.stButton > button[kind="secondary"]:hover {
     border-color: #ffffff !important;
 }
 
-/* CARD NODI DELLA COSTELLAZIONE (BOTTONI PRIMARI) */
+/* CARD NODI DELLA COSTELLAZIONE */
 div.stButton > button[kind="primary"] {
     background: #0f172a !important;
     border: 1px solid #1e293b !important;
     border-top: 2px solid #38bdf8 !important;
     border-radius: 6px !important;
     height: auto !important;
-    min-height: 115px !important;
+    min-height: 118px !important;
     width: 100% !important;
     padding: 15px 18px !important;
     text-align: left !important;
@@ -187,7 +190,7 @@ div.stButton > button[kind="primary"] p::first-line {
     color: #ffffff !important;
 }
 
-/* MATRICE QUADRETTI HACCP INTERNA */
+/* MATRICE QUADRETTI HACCP */
 .haccp-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; margin-bottom: 16px; }
 .haccp-tile {
     width: 160px; min-height: 88px; border-radius: 4px; padding: 10px 12px;
@@ -202,8 +205,7 @@ div.stButton > button[kind="primary"] p::first-line {
 .tile-val    { font-size: 1.05rem; font-weight: 700; margin: 4px 0; }
 .tile-slots  { font-size: 0.65rem; color: #94a3b8; display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 4px; }
 
-/* Etichette input visibili su sfondo scuro */
-label, .stRadio label, .stSelectbox label, .stTextInput label {
+label, .stRadio label, .stSelectbox label, .stTextInput label, .stNumberInput label {
     color: #cbd5e1 !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 0.78rem !important;
@@ -211,7 +213,7 @@ label, .stRadio label, .stSelectbox label, .stTextInput label {
 
 @media (max-width: 768px) {
     .block-container {
-        padding-top: 1.6rem !important;
+        padding-top: 1.4rem !important;
         padding-left: 0.8rem !important;
         padding-right: 0.8rem !important;
     }
@@ -257,7 +259,7 @@ def evaluate_fridge_status(fridge_type, temp_val, is_broken=False):
         elif 5.5 < temp_val <= 8.0 or temp_val < -1.0: return "YELLOW", f"{temp_val:+.1f}°C"
         else: return "RED", f"{temp_val:+.1f}°C"
 
-# --- DNA STRUTTURALE ---
+# --- DNA STRUTTURALE & MEMORIA CONDIVISA ---
 @st.cache_resource
 def get_shared_store():
     nodes = [
@@ -286,8 +288,8 @@ def get_shared_store():
             "fridges": [{"name": "Frigo Office Piani", "kind": "POS"}]
         },
         {
-            "id": "N03", "code": "03", "name": "RICEVIMENTO & HUB", "subtitle": "Front Office & Magazzino Centrale",
-            "sub_zones": ["Front Desk", "Magazzino Centrale", "Baia Scarico Fornitori"],
+            "id": "N03", "code": "03", "name": "RICEVIMENTO & HUB", "subtitle": "Imputazione Presenze, Dispacci & Magazzino",
+            "sub_zones": ["Front Desk & Briefing", "Magazzino Centrale", "Baia Scarico Fornitori"],
             "breakfast_profiles": [],
             "fridges": [
                 {"name": "Cella Latticini/Salumi", "kind": "POS"},
@@ -360,10 +362,20 @@ def get_shared_store():
     return {
         "nodes": nodes,
         "haccp_state": haccp_state,
+        # BRIEFING MATTUTINO IMPUTATO DAL RICEVIMENTO (100% AUTONOMO DAL GESTIONALE)
+        "daily_briefing": {
+            "updated_at": "07:30",
+            "updated_by": "Ricevimento",
+            "pax_colazioni": 112,
+            "pax_hb": 38,
+            "pax_fb": 14,
+            "sala_colazioni": "Veranda 1 + Sala Interna",
+            "note_cucina": "3 Celiaci (Cam. 104, 208) | 2 Senza Lattosio (Cam. 115)"
+        },
         "figurine": [
             {"pin": "1001", "nick": "Marco S.", "role": "Chef Pasticcere", "index_cost": 120, "node_id": "N01", "sub_zone": "Laboratorio Pasticceria", "shift": "Mattina (07-15)"},
             {"pin": "1002", "nick": "Elena R.", "role": "Governante", "index_cost": 100, "node_id": "N02", "sub_zone": "Piano 1", "shift": "Mattina (07-15)"},
-            {"pin": "1003", "nick": "Luca M.", "role": "Runner Magazzino", "index_cost": 85, "node_id": "N03", "sub_zone": "Magazzino Centrale", "shift": "Pranzo/Pom (12-20)"},
+            {"pin": "1003", "nick": "Giulia F.", "role": "Addetta Ricevimento", "index_cost": 95, "node_id": "N03", "sub_zone": "Front Desk & Briefing", "shift": "Mattina (07-15)"},
             {"pin": "1004", "nick": "Jolly 01", "role": "Maître Verande", "index_cost": 110, "node_id": "N04", "sub_zone": "Sala Colazioni", "shift": "Mattina (07-15)"},
             {"pin": "1005", "nick": "Extra A", "role": "Barman", "index_cost": 90, "node_id": "N05", "sub_zone": "Banco Caffetteria", "shift": "Mattina (07-15)"},
             {"pin": "1006", "nick": "DJ / Evento", "role": "Regia Gazebo", "index_cost": 150, "node_id": "N06", "sub_zone": "Gazebo Cerimonie", "shift": "Cena/Sera (18-02)"}
@@ -372,9 +384,9 @@ def get_shared_store():
             {"time": "08:10", "node_id": "N04", "from": "04. Ristorante (Sala Colazioni)", "item": "2 Vassoi Cornetti + Latte Senza Lattosio", "status": "In corso"}
         ],
         "events": [
-            {"id": "EV1", "title": "Matrimonio Rossi-Bianchi", "zone": "Gazebo -> Veranda Circolare", "pax": 130, "cake_time": "22:30", "phase": "1. Accoglienza / Rito"},
-            {"id": "EV2", "title": "50° Anniversario", "zone": "Veranda Grande", "pax": 55, "cake_time": "23:00", "phase": "2. Aperitivo"},
-            {"id": "EV3", "title": "Ristorante Pensioni & Carta", "zone": "Veranda 1 + Sala Interna", "pax": 85, "cake_time": "Continuo", "phase": "3. Servito"}
+            {"id": "EV1", "title": "Matrimonio Rossi-Bianchi", "zone": "Gazebo -> Veranda Circolare", "pax": 130, "cake_time": "22:30", "notes": "Aperitivo a buffet in spiaggia, 2 vegani tavolo sposi", "phase": "1. Accoglienza / Rito"},
+            {"id": "EV2", "title": "50° Anniversario", "zone": "Veranda Grande", "pax": 55, "cake_time": "23:00", "notes": "Torta millefoglie da Pasticceria", "phase": "2. Aperitivo"},
+            {"id": "EV3", "title": "Ristorante Pensioni & Carta", "zone": "Veranda 1 + Sala Interna", "pax": 85, "cake_time": "Continuo", "notes": "Servizio standard + Mezze Pensioni", "phase": "3. Servito"}
         ],
         "alarm_counter": 0
     }
@@ -390,18 +402,18 @@ if "last_sos_count" not in st.session_state:
 if "last_alarm_counter" not in st.session_state:
     st.session_state.last_alarm_counter = store["alarm_counter"]
 
-# --- INTESTAZIONE + BARRA DI COMANDO RAPIDA DIRETTAMENTE IN CIMA (ZERO BISOGNO DEL PANNELLO LATERALE) ---
-st.markdown("""
+# --- INTESTAZIONE + BARRA DI COMANDO RAPIDA IN CIMA ---
+bf = store["daily_briefing"]
+st.markdown(f"""
 <div class="top-bar">
     <div class="brand-title">SOVEREIGN KINETIC ARCHITECTURE <span>// BOSCHETTO PRO</span></div>
-    <div class="brand-sub">BEMASK COMMAND SYSTEM · ZERO-TRACE PROTOCOL</div>
+    <div class="brand-sub">PRESENZE OGGI ({bf['updated_at']}): {bf['pax_colazioni']} COLAZIONI · {bf['pax_hb']} HB · {bf['pax_fb']} FB</div>
 </div>
 """, unsafe_allow_html=True)
 
-# Barra di controllo immediata visibile sia su PC che su Smartphone senza aprire il menu laterale
 c_pin, c_btn, c_refresh, c_sonar = st.columns([1.3, 1.1, 1.1, 1.2])
 with c_pin:
-    new_pin = st.text_input("PIN ACCESSO (9999 Dir. | 1001 Staff)", value=st.session_state.active_pin, label_visibility="collapsed", placeholder="PIN (es. 9999 o 1001)")
+    new_pin = st.text_input("PIN ACCESSO", value=st.session_state.active_pin, label_visibility="collapsed", placeholder="PIN (9999 Dir. | 1003 Ricevimento | 1001 Staff)")
 with c_btn:
     if st.button("CONFERMA PIN ↵", type="secondary", use_container_width=True) or (new_pin != st.session_state.active_pin):
         st.session_state.active_pin = new_pin.strip()
@@ -411,28 +423,13 @@ with c_btn:
         st.rerun()
 with c_refresh:
     if st.button("AGGIORNA LIVE ↻", type="secondary", use_container_width=True):
-        st.toast("Sincronizzazione completata")
+        st.toast("Plancia sincronizzata")
         st.rerun()
 with c_sonar:
     sonar_active = st.toggle("SONAR AUDIO URGENZE", value=False)
 
 pin_input = st.session_state.active_pin
 
-# --- BARRA LATERALE OPZIONALE (SOLO PONTI ECOSISTEMA) ---
-with st.sidebar:
-    st.markdown("### PONTI ECOSISTEMA BEMASK")
-    st.caption("I controlli principali di PIN e Aggiornamento sono ora direttamente in cima alla pagina.")
-    hook_sz = st.toggle("Sovereign Zero (Hotel)", value=True)
-    hook_lz = st.toggle("LAZERS (F&B Engine)", value=True)
-    if hook_sz:
-        st.caption("Sovereign Zero: 112 Pax in Casa")
-    if hook_lz:
-        st.caption("LAZERS: 3 Linee Colazione | 38 HB | 3 Celiaci")
-    st.divider()
-    if st.button("Test Ping Audio"): play_tactical_sonar("ping")
-    if st.button("Test Allarme Grave"): play_tactical_sonar("alarm")
-
-# --- CONTROLLO SONAR AUTOMATICO ---
 if sonar_active:
     if len(store["sos_queue"]) > st.session_state.last_sos_count:
         play_tactical_sonar("ping")
@@ -450,6 +447,15 @@ if pin_input in ["9999", "0000"]:
 
     if is_architect:
         st.info("MODALITÀ MASTER ARCHITECT ATTIVA (PIN 0000) — Modifica strutturale abilitata.")
+
+    # DISPACCIO GIORNALIERO DAL RICEVIMENTO SEMPRE IN EVIDENZA
+    st.markdown(
+        f"<div class='dispatch-bar'>📋 <b>DISPACCIO RICEVIMENTO ({bf['updated_at']}):</b> "
+        f"Colazioni: <b>{bf['pax_colazioni']} pax</b> ({bf['sala_colazioni']})  |  "
+        f"Mezze Pensioni (HB): <b>{bf['pax_hb']}</b>  |  Complete (FB): <b>{bf['pax_fb']}</b>  |  "
+        f"Allergie/Note: <b>{bf['note_cucina']}</b></div>",
+        unsafe_allow_html=True
+    )
 
     red_tiles = [v["fridge_name"] for v in store["haccp_state"].values() if v["status"] == "RED"]
     if red_tiles:
@@ -471,10 +477,11 @@ if pin_input in ["9999", "0000"]:
 
         st.markdown(f"""
         <div class="kpi-bar">
-            <div class="kpi-box"><div class="kpi-lbl">Nodi Struttura</div><div class="kpi-num">07 ATTIVI</div></div>
-            <div class="kpi-box"><div class="kpi-lbl">Forza Lavoro</div><div class="kpi-num">{tot_fig} UNITA ({tot_pts} PT)</div></div>
+            <div class="kpi-box"><div class="kpi-lbl">Colazioni & Pensioni</div><div class="kpi-num">{bf['pax_colazioni']} COL · {bf['pax_hb']} HB</div></div>
+            <div class="kpi-box"><div class="kpi-lbl">Nodi Struttura</div><div class="kpi-num">07 REPARTI</div></div>
+            <div class="kpi-box"><div class="kpi-lbl">Brigata Attiva</div><div class="kpi-num">{tot_fig} UNITA ({tot_pts} PT)</div></div>
             <div class="kpi-box"><div class="kpi-lbl">Coda Logistica</div><div class="kpi-num">{tot_sos} SOS APERTI</div></div>
-            <div class="kpi-box"><div class="kpi-lbl">Regia Eventi</div><div class="kpi-num">{tot_ev} LIVE ({tot_pax} PAX)</div></div>
+            <div class="kpi-box"><div class="kpi-lbl">Agenda Eventi</div><div class="kpi-num">{tot_ev} LIVE ({tot_pax} PAX)</div></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -513,57 +520,118 @@ if pin_input in ["9999", "0000"]:
 
         with grid_cols[7]:
             hub_label = (
-                f"08 // REGIA EVENTI & VAULT\n"
-                f"Sincronia Cerimonie & Backup 03:00 AM\n"
-                f"EVENTI: {tot_ev} ({tot_pax} PAX)   |   ZERO-TRACE"
+                f"08 // AGENDA EVENTI & BRIGATA\n"
+                f"Crea Eventi, Gestisci Dipendenti & PIN\n"
+                f"EVENTI: {tot_ev} ({tot_pax} PAX)   |   STAFF: {tot_fig}"
             )
             if st.button(hub_label, key="tile_HUB", type="primary", use_container_width=True):
                 st.session_state.selected_node_id = "HUB_VAULT"
                 st.rerun()
 
     # --------------------------------------------------------------------------
-    # VISTA 08: REGIA MULTI-EVENTO & CASSAFORTE 03:00 AM
+    # VISTA 08: AGENDA EVENTI, GESTIONE DIPENDENTI/PIN & CASSAFORTE
     # --------------------------------------------------------------------------
     elif st.session_state.selected_node_id == "HUB_VAULT":
         if st.button("⬅ TORNA ALLA COSTELLAZIONE PRINCIPALE", type="secondary", use_container_width=True):
             st.session_state.selected_node_id = None
             st.rerun()
 
-        st.markdown("### 08 // REGIA MULTI-EVENTO & CASSAFORTE 03:00 AM")
-        st.divider()
+        st.markdown("### 08 // AGENDA EVENTI, ANAGRAFICA BRIGATA & ARCHIVIO")
 
-        phase_options = [
-            "1. Accoglienza / Rito",
-            "2. Aperitivo",
-            "3. Servito",
-            "4. Alert Pasticceria: Fuori Torta!",
-            "5. Open Bar & Musica"
-        ]
-        cols_ev = st.columns(len(store["events"]))
-        for idx, ev in enumerate(store["events"]):
-            with cols_ev[idx]:
-                st.markdown(f"**{ev['title']}**")
-                st.caption(f"Zona: {ev['zone']}  |  Ospiti: {ev['pax']} pax  |  Torta: {ev['cake_time']}")
-                cur_i = phase_options.index(ev["phase"]) if ev["phase"] in phase_options else 0
-                new_ph = st.selectbox("Stato Avanzamento", phase_options, index=cur_i, key=f"ev_{ev['id']}")
-                if new_ph != ev["phase"]:
-                    ev["phase"] = new_ph
+        tab_ev, tab_staff, tab_vault = st.tabs([
+            "📅 1. AGENDA EVENTI & CERIMONIE",
+            "👥 2. GESTIONE DIPENDENTI & PIN (AUTONOMIA)",
+            "🔐 3. CHIUSURA & ARCHIVIO NOTTURNO"
+        ])
+
+        with tab_ev:
+            st.markdown("##### EVENTI E SERVIZI ATTIVI OGGI")
+            phase_options = [
+                "1. Accoglienza / Rito",
+                "2. Aperitivo",
+                "3. Servito",
+                "4. Alert Pasticceria: Fuori Torta!",
+                "5. Open Bar & Musica"
+            ]
+            for idx, ev in enumerate(store["events"]):
+                with st.expander(f"{ev['title']} — {ev['zone']} ({ev['pax']} pax | Torta: {ev['cake_time']})", expanded=True):
+                    st.caption(f"Note Dispaccio: {ev.get('notes', '-')}")
+                    c_e1, c_e2 = st.columns([3, 1])
+                    cur_i = phase_options.index(ev["phase"]) if ev["phase"] in phase_options else 0
+                    new_ph = c_e1.selectbox("Stato Avanzamento Live", phase_options, index=cur_i, key=f"ev_{ev['id']}")
+                    if new_ph != ev["phase"]:
+                        ev["phase"] = new_ph
+                        st.rerun()
+                    if c_e2.button("Elimina Evento", key=f"del_ev_{ev['id']}"):
+                        store["events"].pop(idx)
+                        st.rerun()
+
+            st.divider()
+            st.markdown("##### ➕ INSERISCI NUOVO EVENTO IN AGENDA")
+            ce1, ce2, ce3, ce4 = st.columns(4)
+            ne_title = ce1.text_input("Titolo Evento (es. Matrimonio Neri)")
+            ne_zone = ce2.selectbox("Location / Veranda", ["Gazebo -> Veranda Circolare", "Veranda Grande", "Veranda 1", "Veranda 2", "Sala Interna", "Spiaggia & Chiosco"])
+            ne_pax = ce3.number_input("Numero Ospiti (Pax)", min_value=1, value=60, step=5)
+            ne_cake = ce4.text_input("Orario Uscita Torta", value="22:45")
+            ne_notes = st.text_input("Note Operative per Cucina, Sala e Pasticceria (allergie, menu, allestimento)")
+            if st.button("SALVA NUOVO EVENTO IN AGENDA", type="secondary"):
+                if ne_title:
+                    store["events"].append({
+                        "id": f"EV{int(datetime.now().timestamp())}",
+                        "title": ne_title, "zone": ne_zone, "pax": ne_pax,
+                        "cake_time": ne_cake, "notes": ne_notes, "phase": "1. Accoglienza / Rito"
+                    })
+                    st.toast("Evento aggiunto in Agenda!")
                     st.rerun()
 
-        st.divider()
-        c_v1, c_v2 = st.columns(2)
-        with c_v1:
-            st.download_button(
-                "SCARICA VAULT CRIPTATO 03:00 AM (.JSON)",
-                data=json.dumps({"haccp": store["haccp_state"], "staff": store["figurine"], "events": store["events"]}, indent=2),
-                file_name=f"SKA_BOSCHETTO_PRO_{datetime.now().strftime('%Y%m%d')}.json",
-                use_container_width=True
-            )
-        with c_v2:
-            if st.button("RESET NUOVO GIRO HACCP (RIPORTA IN ATTESA)", type="secondary", use_container_width=True):
-                for k in store["haccp_state"]:
-                    store["haccp_state"][k].update({"status": "PURPLE", "label": "ATTESA", "by": "-", "time": "--:--"})
-                st.rerun()
+        with tab_staff:
+            st.markdown("##### ➕ CREA NUOVO OPERATORE / ASSEGNA PIN")
+            st.caption("La Direzione o il Ricevimento possono inserire qui in piena autonomia nuovi dipendenti o extra del weekend.")
+            cs1, cs2, cs3 = st.columns(3)
+            ns_nick = cs1.text_input("Nome / Nickname (es. Matteo B.)")
+            ns_role = cs2.text_input("Mansione (es. Cameriere Veranda / Extra)")
+            ns_pin = cs3.text_input("Assegna PIN a 4 cifre (es. 1007)")
+
+            cs4, cs5, cs6 = st.columns(3)
+            node_map = {f"{n['code']} - {n['name']}": n for n in store["nodes"]}
+            ns_node_label = cs4.selectbox("Reparto di Destinazione", list(node_map.keys()))
+            chosen_node = node_map[ns_node_label]
+            ns_sub = cs5.selectbox("Sottozona", chosen_node["sub_zones"])
+            ns_shift = cs6.selectbox("Turno", ["Mattina (07-15)", "Pranzo/Pom (12-20)", "Cena/Sera (18-02)"])
+
+            if st.button("AGGIUNGI OPERATORE ALLA BRIGATA", type="secondary"):
+                if ns_nick and ns_pin:
+                    store["figurine"].append({
+                        "pin": ns_pin.strip(), "nick": ns_nick.strip(), "role": ns_role.strip() or "Operatore",
+                        "index_cost": 100, "node_id": chosen_node["id"], "sub_zone": ns_sub, "shift": ns_shift
+                    })
+                    st.toast(f"Operatore {ns_nick} (PIN {ns_pin}) attivato!")
+                    st.rerun()
+
+            st.divider()
+            st.markdown("##### ELENCO COMPLETO BRIGATA E PIN ATTIVI")
+            for idx_f, f in enumerate(store["figurine"]):
+                cf1, cf2 = st.columns([4, 1])
+                cf1.markdown(f"- **PIN `{f['pin']}`** — **{f['nick']}** ({f['role']})  |  Reparto: `{f['node_id']}` ({f['sub_zone']})  |  `{f['shift']}`")
+                if cf2.button("Rimuovi", key=f"rm_fig_{f['pin']}_{idx_f}"):
+                    store["figurine"].pop(idx_f)
+                    st.rerun()
+
+        with tab_vault:
+            st.markdown("##### CHIUSURA GIORNATA & SCARICO REGISTRO")
+            c_v1, c_v2 = st.columns(2)
+            with c_v1:
+                st.download_button(
+                    "SCARICA VAULT CRIPTATO 03:00 AM (.JSON)",
+                    data=json.dumps({"briefing": store["daily_briefing"], "haccp": store["haccp_state"], "staff": store["figurine"], "events": store["events"]}, indent=2),
+                    file_name=f"SKA_BOSCHETTO_PRO_{datetime.now().strftime('%Y%m%d')}.json",
+                    use_container_width=True
+                )
+            with c_v2:
+                if st.button("RESET NUOVO GIRO HACCP (RIPORTA IN ATTESA)", type="secondary", use_container_width=True):
+                    for k in store["haccp_state"]:
+                        store["haccp_state"][k].update({"status": "PURPLE", "label": "ATTESA", "by": "-", "time": "--:--"})
+                    st.rerun()
 
     # --------------------------------------------------------------------------
     # LIVELLO 1: INTERNO DEL SINGOLO REPARTO (N01..N07)
@@ -578,6 +646,28 @@ if pin_input in ["9999", "0000"]:
 
         st.markdown(f"### {node['code']} // {node['name']} — {node['subtitle']}")
         st.divider()
+
+        # SE SIAMO NEL NODO 03 (RICEVIMENTO), MOSTRA IL MODULO DI IMPUTAZIONE MATTUTINA!
+        if nid == "N03":
+            st.markdown("#### 📋 IMPUTAZIONE MATTUTINA PRESENZE, COLAZIONI & DISPACCI (RICEVIMENTO)")
+            st.caption("Inserisci qui i numeri del giorno letti dal foglio arrivi/presenze. Si aggiorneranno istantaneamente per Cucina, Sala e Pasticceria.")
+            b1, b2, b3, b4 = st.columns(4)
+            new_col = b1.number_input("Colazioni Totali Oggi", min_value=0, value=bf["pax_colazioni"], step=1)
+            new_hb = b2.number_input("Mezze Pensioni (HB)", min_value=0, value=bf["pax_hb"], step=1)
+            new_fb = b3.number_input("Pensioni Complete (FB)", min_value=0, value=bf["pax_fb"], step=1)
+            new_sala = b4.selectbox("Sala Colazioni Attiva", ["Veranda 1 + Sala Interna", "Solo Veranda 1", "Solo Sala Interna", "Veranda Grande", "Gazebo Spiaggia"])
+            new_note = st.text_input("Segnalazioni Allergie / Celiaci / Intolleranze / Note Reparti:", value=bf["note_cucina"])
+
+            if st.button("PUBBLICA DISPACCI DEL GIORNO A TUTTI I REPARTI", type="secondary", use_container_width=True):
+                bf.update({
+                    "updated_at": datetime.now().strftime("%H:%M"),
+                    "updated_by": "Ricevimento / Direzione",
+                    "pax_colazioni": new_col, "pax_hb": new_hb, "pax_fb": new_fb,
+                    "sala_colazioni": new_sala, "note_cucina": new_note
+                })
+                st.toast("Dispaccio giornaliero pubblicato a tutti i reparti!")
+                st.rerun()
+            st.divider()
 
         col_haccp, col_ops = st.columns([1.6, 1.4])
 
@@ -619,7 +709,7 @@ if pin_input in ["9999", "0000"]:
                             st.rerun()
 
         with col_ops:
-            st.markdown("##### SOTTOZONE & LINEE COLAZIONE (LAZERS)")
+            st.markdown("##### SOTTOZONE & LINEE COLAZIONE")
             st.pills("Sottozone Reparto:", node["sub_zones"], default=node["sub_zones"][0] if node["sub_zones"] else None)
             if node["breakfast_profiles"]:
                 for idx_b, bp in enumerate(node["breakfast_profiles"]):
@@ -652,18 +742,48 @@ if pin_input in ["9999", "0000"]:
                     st.rerun()
 
 # ==============================================================================
-# VISTA 2: TERMINALE OPERATORE (PIN 1001, 1002...)
+# VISTA 2: TERMINALE OPERATORE & RICEVIMENTO (PIN 1001, 1003, 1004...)
 # ==============================================================================
 else:
     user = next((f for f in store["figurine"] if f["pin"] == pin_input), None)
     if not user:
-        st.error(f"PIN '{pin_input}' non riconosciuto. Inserisci 9999 (Direzione) o 1001..1006 (Operatori) nella casella in alto.")
+        st.error(f"PIN '{pin_input}' non riconosciuto. Inserisci 9999 (Direzione) o un PIN Operatore attivo.")
     else:
         user_node = next(n for n in store["nodes"] if n["id"] == user["node_id"])
-        st.success(f"SESSIONE OPERATORE ATTIVA: {user['nick']} ({user['role']}) — Per tornare in Direzione digita 9999 in alto.")
-        st.markdown(f"### {user_node['code']} // {user_node['name']} — {user['sub_zone']}")
-        st.caption(f"TURNO ASSEGNATO: {user['shift']}")
-        st.divider()
+        st.success(f"OPERATORE ATTIVO: {user['nick']} ({user['role']}) — Reparto: {user_node['name']}")
+
+        # OGNI OPERATORE VEDE SUBITO IN CIMA IL DISPACCIO DEL RICEVIMENTO E GLI EVENTI!
+        st.markdown(
+            f"<div class='dispatch-bar'>📋 <b>BRIEFING OGGI ({bf['updated_at']}):</b> "
+            f"Colazioni: <b>{bf['pax_colazioni']} pax</b> ({bf['sala_colazioni']}) | "
+            f"HB: <b>{bf['pax_hb']}</b> | FB: <b>{bf['pax_fb']}</b><br>"
+            f"⚠️ <b>Note/Allergie:</b> {bf['note_cucina']}</div>",
+            unsafe_allow_html=True
+        )
+
+        with st.expander("📅 Vedi Agenda Eventi & Orari Torte di Oggi", expanded=False):
+            for ev in store["events"]:
+                st.markdown(f"- **{ev['title']}** ({ev['zone']} · `{ev['pax']} pax`) — **{ev['phase']}** | Torta: `{ev['cake_time']}` | *{ev.get('notes', '')}*")
+
+        # SE L'OPERATORE È DEL RICEVIMENTO (N03), PUÒ IMPUTARE I NUMERI DIRETTAMENTE DAL SUO PIN!
+        if user["node_id"] == "N03":
+            st.markdown("##### 📋 IMPUTAZIONE PRESENZE & DISPACCI MATTUTINI (FRONT DESK)")
+            b1, b2, b3 = st.columns(3)
+            u_col = b1.number_input("Colazioni Oggi", min_value=0, value=bf["pax_colazioni"])
+            u_hb = b2.number_input("Mezze Pensioni (HB)", min_value=0, value=bf["pax_hb"])
+            u_fb = b3.number_input("Pensioni Complete (FB)", min_value=0, value=bf["pax_fb"])
+            u_sala = st.selectbox("Sala Colazioni", ["Veranda 1 + Sala Interna", "Solo Veranda 1", "Solo Sala Interna", "Veranda Grande"])
+            u_note = st.text_input("Allergie / Celiaci / Note per Cucina e Pasticceria:", value=bf["note_cucina"])
+            if st.button("AGGIORNA E INVIA A TUTTI I REPARTI", type="secondary", use_container_width=True):
+                bf.update({
+                    "updated_at": datetime.now().strftime("%H:%M"),
+                    "updated_by": user["nick"],
+                    "pax_colazioni": u_col, "pax_hb": u_hb, "pax_fb": u_fb,
+                    "sala_colazioni": u_sala, "note_cucina": u_note
+                })
+                st.toast("Numeri del giorno inviati a tutti i reparti!")
+                st.rerun()
+            st.divider()
 
         st.markdown("##### 1. REGISTRAZIONE TEMPERATURA HACCP")
         round_sel = st.radio("Giro di Controllo:", ["M (Mattina)", "P (Pomeriggio)", "S (Sera)"], horizontal=True)
