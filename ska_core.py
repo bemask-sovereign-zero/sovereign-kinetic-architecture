@@ -11,25 +11,20 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- OROLOGIO DI SISTEMA (FUSO ORARIO ITALIA) E MOTORE REMIND AUTOMATICO ---
+# --- OROLOGIO DI SISTEMA (FUSO ORARIO ITALIA) ---
 def get_italy_now():
     return datetime.now(timezone(timedelta(hours=1)))
 
 def get_current_window_info(now_dt):
     h = now_dt.hour
-    m = now_dt.minute
-    cur_mins = h * 60 + m
     if 6 <= h < 14:
-        overdue = cur_mins >= (9 * 60 + 30)
-        return "MATTINA (06:00-14:00)", "09:30", overdue
+        return "MATTINA (06:00-14:00)"
     elif 14 <= h < 19:
-        overdue = cur_mins >= (16 * 60)
-        return "POMERIGGIO (14:00-19:00)", "16:00", overdue
+        return "POMERIGGIO (14:00-19:00)"
     else:
-        overdue = (h >= 21) or (h < 6)
-        return "SERA (19:00-03:00)", "21:00", overdue
+        return "SERA (19:00-03:00)"
 
-# --- CSS ARCHITETTONICO + QUADRATI SIMMETRICI AL MILLIMETRO ---
+# --- CSS ARCHITETTONICO CON COLONNA VERTICALE DESTRA E GRIGLIA SIMMETRICA ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -52,15 +47,15 @@ button[data-testid="collapsedControl"],
 }
 
 .block-container {
-    padding-top: 1.5rem !important;
+    padding-top: 1.4rem !important;
     padding-bottom: 2rem !important;
-    max-width: 1420px !important;
+    max-width: 1460px !important;
 }
 
 .top-bar {
     border-bottom: 1px solid #1e293b;
     padding-bottom: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -89,45 +84,64 @@ button[data-testid="collapsedControl"],
     border-radius: 4px;
 }
 
-.kpi-bar {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 16px;
+/* GRANDE RETTANGOLO VERTICALE DI RIEPILOGO A DESTRA */
+.right-tower {
+    background: linear-gradient(180deg, #0d1524 0%, #09101d 100%);
+    border: 1.5px solid #1e3a5f;
+    border-top: 3px solid #38bdf8;
+    border-radius: 8px;
+    padding: 18px 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
-.kpi-box {
-    background: #0d1524;
+.tower-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+}
+.tower-item {
+    background: #070c15;
     border: 1px solid #1e293b;
     border-left: 3px solid #38bdf8;
-    border-radius: 4px;
-    padding: 9px 12px;
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
 }
-.kpi-lbl {
+.tower-lbl {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     color: #94a3b8;
     text-transform: uppercase;
 }
-.kpi-num {
+.tower-val {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.0rem;
+    font-size: 1.35rem;
     font-weight: 700;
-    color: #f8fafc;
-    margin-top: 2px;
+    color: #ffffff;
+    margin-top: 3px;
+}
+.tower-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: #64748b;
+    margin-top: 3px;
+}
+.tower-legend {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #1e293b;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.70rem;
+    color: #cbd5e1;
+    line-height: 1.8;
 }
 
-/* BANNER ALLERTE E REMIND */
-.alert-bar-remind {
-    background: #23190f;
-    border: 1px solid #f59e0b;
-    border-left: 5px solid #fbbf24;
-    color: #fef3c7;
-    padding: 10px 14px;
-    border-radius: 4px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.80rem;
-    margin-bottom: 10px;
-}
+/* BANNER ALLERTE CRITICHE E SOS */
 .alert-bar-sos {
     background: #131d31;
     border: 1px solid #0284c7;
@@ -168,24 +182,24 @@ div.stButton > button[kind="secondary"] p { color: #ffffff !important; font-weig
 div.stButton > button[kind="secondary"]:hover { background: #0ea5e9 !important; border-color: #ffffff !important; }
 div.stButton > button[kind="secondary"]:active { transform: scale(0.97) !important; }
 
-/* GRANDI QUADRATI TOUCH: ALTEZZA IDENTICA BLOCCATA A 164px PER TUTTI GLI 8 BLOCCHI */
+/* GRANDI QUADRATI TOUCH: ALTEZZA IDENTICA BLOCCATA A 154px */
 div.stButton > button[kind="primary"] {
     background: linear-gradient(160deg, #0d1524 0%, #111c30 100%) !important;
     border: 1.5px solid #1e3a5f !important;
     border-top: 2.5px solid #38bdf8 !important;
     border-radius: 8px !important;
-    height: 164px !important;
-    min-height: 164px !important;
-    max-height: 164px !important;
+    height: 154px !important;
+    min-height: 154px !important;
+    max-height: 154px !important;
     width: 100% !important;
-    padding: 14px 16px !important;
+    padding: 12px 15px !important;
     text-align: left !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
     align-items: stretch !important;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45) !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 6px !important;
     cursor: pointer !important;
     user-select: none !important;
     overflow: hidden !important;
@@ -209,7 +223,6 @@ div.stButton > button[kind="primary"]:active {
     font-family: 'JetBrains Mono', monospace; color: #f8fafc;
 }
 .tile-purple  { background: #1e1333; border: 1.5px solid #9333ea; border-left: 5px solid #a855f7; }
-.tile-overdue { background: #2b1708; border: 1.5px solid #f59e0b; border-left: 5px solid #fbbf24; }
 .tile-green   { background: #092218; border: 1.5px solid #16a34a; border-left: 5px solid #22c55e; }
 .tile-yellow  { background: #261c0b; border: 1.5px solid #d97706; border-left: 5px solid #eab308; }
 .tile-red     { background: #2b1115; border: 1.5px solid #dc2626; border-left: 5px solid #ef4444; }
@@ -246,7 +259,6 @@ label, .stRadio label, .stSelectbox label, .stTextInput label, .stNumberInput la
 
 @media (max-width: 768px) {
     .block-container { padding-top: 1.2rem !important; padding-left: 0.7rem !important; padding-right: 0.7rem !important; }
-    .kpi-bar { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .haccp-tile { width: 48% !important; }
 }
 </style>
@@ -370,7 +382,7 @@ def evaluate_fridge_status(fridge_type, temp_val, is_broken=False):
         elif 5.5 < temp_val <= 8.0 or temp_val < -1.0: return "YELLOW", f"{temp_val:+.1f}°C"
         else: return "RED", f"{temp_val:+.1f}°C"
 
-# --- MOTORE GRAFICO CON GEOMETRIA IDENTICA PER TUTTI GLI 8 QUADRATI ---
+# --- MOTORE GRAFICO CON GEOMETRIA IDENTICA PER TUTTI I 10 QUADRATI ---
 def inject_matrix_into_touch_cards(cards_payload):
     payload_json = json.dumps(cards_payload)
     js = f"""
@@ -386,34 +398,34 @@ def inject_matrix_into_touch_cards(cards_payload):
                     if (rawText.includes(c.marker)) {{
                         let sqHtml = '';
                         if (c.squares.length === 0) {{
-                            for (let i=0; i<4; i++) {{
-                                sqHtml += `<span style="display:inline-block;width:15px;height:15px;border-radius:3px;background:#0f172a;border:1.5px solid #334155;"></span>`;
+                            for (let i=0; i<3; i++) {{
+                                sqHtml += `<span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#0f172a;border:1.5px solid #334155;"></span>`;
                             }}
                         }} else {{
                             c.squares.forEach(col => {{
-                                sqHtml += `<span style="display:inline-block;width:15px;height:15px;border-radius:3px;background:${{col.bg}};border:1.5px solid ${{col.border}};box-shadow:0 0 5px ${{col.bg}}66;"></span>`;
+                                sqHtml += `<span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:${{col.bg}};border:1.5px solid ${{col.border}};box-shadow:0 0 5px ${{col.bg}}66;"></span>`;
                             }});
                         }}
                         let dotsHtml = '';
-                        const totDots = Math.max(c.staff_count, 5);
+                        const totDots = Math.max(c.staff_count, 4);
                         for (let i=0; i<totDots; i++) {{
                             if (i < c.staff_count) {{
-                                dotsHtml += `<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#0ea5e9;border:1.5px solid #7dd3fc;box-shadow:0 0 6px #0ea5e988;"></span>`;
+                                dotsHtml += `<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#0ea5e9;border:1.5px solid #7dd3fc;box-shadow:0 0 6px #0ea5e988;"></span>`;
                             }} else {{
-                                dotsHtml += `<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#0f172a;border:1.5px solid #1e293b;"></span>`;
+                                dotsHtml += `<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#0f172a;border:1.5px solid #1e293b;"></span>`;
                             }}
                         }}
                         btn.innerHTML = `
-                        <div style="width:100%;height:134px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;pointer-events:none;">
+                        <div style="width:100%;height:126px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;pointer-events:none;">
                             <div>
-                                <div style="font-family:'Inter',sans-serif;font-size:0.94rem;font-weight:700;color:#ffffff;letter-spacing:0.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${{c.title}}</div>
-                                <div style="font-family:'Inter',sans-serif;font-size:0.74rem;color:#94a3b8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${{c.subtitle}}</div>
+                                <div style="font-family:'Inter',sans-serif;font-size:0.92rem;font-weight:700;color:#ffffff;letter-spacing:0.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${{c.title}}</div>
+                                <div style="font-family:'Inter',sans-serif;font-size:0.72rem;color:#94a3b8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${{c.subtitle}}</div>
                             </div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 11px;background:#070c15;border:1px solid #1e293b;border-radius:6px;min-height:42px;">
-                                <div style="display:flex;flex-wrap:wrap;gap:5px;max-width:65%;">${{sqHtml}}</div>
-                                <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;max-width:35%;">${{dotsHtml}}</div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;background:#070c15;border:1px solid #1e293b;border-radius:6px;min-height:38px;">
+                                <div style="display:flex;flex-wrap:wrap;gap:4px;max-width:65%;">${{sqHtml}}</div>
+                                <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:35%;">${{dotsHtml}}</div>
                             </div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.71rem;color:#cbd5e1;border-top:1px solid #1e293b;padding-top:6px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.69rem;color:#cbd5e1;border-top:1px solid #1e293b;padding-top:5px;">
                                 <span>STAFF: <b style="color:#38bdf8;">${{c.staff_count}}</b></span>
                                 <span>HACCP: <b style="color:${{c.status_color}};">${{c.haccp_txt}}</b></span>
                             </div>
@@ -431,13 +443,18 @@ def inject_matrix_into_touch_cards(cards_payload):
     """
     components.html(js, height=0, width=0)
 
-# --- DNA STRUTTURALE DINAMICO (SENZA SOS PRECARICATI) ---
+# --- NUOVA ARCHITETTURA UFFICIALE A 10 BLOCCHI (00 -> 09) ---
 @st.cache_resource
 def get_shared_store():
     nodes = [
         {
-            "id": "N01", "code": "01", "name": "CASA MADRE", "subtitle": "Laboratorio Pasticceria & Direzione",
-            "sub_zones": ["Laboratorio Pasticceria", "Zona Forni & Sfogliatura", "Uffici Direzione"],
+            "id": "N00", "code": "00", "name": "DIREZIONE", "subtitle": "Ufficio Direzionale & Slot Strategico",
+            "sub_zones": ["Ufficio Direzione", "Amministrazione", "Controllo Gestione"],
+            "fridges": []
+        },
+        {
+            "id": "N01", "code": "01", "name": "PASTICCERIA", "subtitle": "Laboratorio Pasticceria & Forni",
+            "sub_zones": ["Laboratorio Pasticceria", "Zona Forni & Sfogliatura"],
             "fridges": [
                 {"name": "Cella Basi +4°C", "kind": "POS"},
                 {"name": "Cella Semifreddi -18°C", "kind": "NEG"},
@@ -446,7 +463,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N02", "code": "02", "name": "CORPO ALBERGO", "subtitle": "Camere, Piani & Housekeeping",
+            "id": "N02", "code": "02", "name": "CAMERE", "subtitle": "Piani, Camere & Housekeeping",
             "sub_zones": ["Piano 1", "Piano 2", "Office Biancheria"],
             "fridges": [
                 {"name": "Frigo Office Piano 1", "kind": "POS"},
@@ -454,8 +471,8 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N03", "code": "03", "name": "RICEVIMENTO & HUB", "subtitle": "Front Office & Magazzino Centrale",
-            "sub_zones": ["Front Desk", "Magazzino Centrale", "Baia Scarico Fornitori"],
+            "id": "N03", "code": "03", "name": "RECEPTION", "subtitle": "Front Office, Accoglienza & Hub",
+            "sub_zones": ["Front Desk", "Magazzino Centrale", "Scarico Fornitori"],
             "fridges": [
                 {"name": "Cella Latticini/Salumi", "kind": "POS"},
                 {"name": "Cella Ortofrutta +6°C", "kind": "POS"},
@@ -463,11 +480,18 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N04", "code": "04", "name": "RISTORANTE & SALE", "subtitle": "Cucina Centrale, Sala Colazioni & 5 Verande",
-            "sub_zones": ["Sala Colazioni", "Sala Interna", "Veranda 1", "Veranda 2", "Veranda Grande", "Veranda Circolare", "Cucina Centrale"],
+            "id": "N04", "code": "04", "name": "SALA COLAZIONI", "subtitle": "Buffet Mattutino & Caffetteria Sala",
+            "sub_zones": ["Buffet Centrale", "Sala Colazioni Interna", "Veranda Colazioni"],
             "fridges": [
                 {"name": "Buffet Freddo Colazioni", "kind": "POS"},
-                {"name": "Vetrina Yogurt/Salumi", "kind": "POS"},
+                {"name": "Vetrina Yogurt & Latte", "kind": "POS"},
+                {"name": "Vetrina Salumi & Formaggi", "kind": "POS"}
+            ]
+        },
+        {
+            "id": "N05", "code": "05", "name": "RISTORANTE", "subtitle": "Cucina Centrale & 5 Verande",
+            "sub_zones": ["Cucina Centrale", "Sala Interna", "Veranda 1", "Veranda 2", "Veranda Grande", "Veranda Circolare"],
+            "fridges": [
                 {"name": "Cella Carne +2°C", "kind": "POS"},
                 {"name": "Cella Pesce 0°C", "kind": "POS"},
                 {"name": "Congelatore Stoccaggio", "kind": "NEG"},
@@ -477,8 +501,8 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N05", "code": "05", "name": "CORPO BAR", "subtitle": "Caffetteria, Terrazza & Gelateria",
-            "sub_zones": ["Banco Caffetteria", "Terrazza Aperitivi", "Cocktail Station"],
+            "id": "N06", "code": "06", "name": "BAR", "subtitle": "Terrazza Bar, Caffetteria & Gelateria",
+            "sub_zones": ["Banco Caffetteria", "Terrazza Bar", "Cocktail Station"],
             "fridges": [
                 {"name": "Banco Bar 1 (Latte)", "kind": "POS"},
                 {"name": "Banco Bar 2 (Birre/Vini)", "kind": "POS"},
@@ -487,16 +511,15 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N06", "code": "06", "name": "SPIAGGIA & GAZEBO", "subtitle": "Stabilimento Balneare & Regia Eventi",
+            "id": "N07", "code": "07", "name": "SPIAGGIA", "subtitle": "Stabilimento Balneare & Gazebo",
             "sub_zones": ["Gazebo Cerimonie", "Ombrelloni & Tende", "Chiosco Spiaggia"],
             "fridges": [
                 {"name": "Frigo Champagne Gazebo", "kind": "POS"},
-                {"name": "Banco Bar Spiaggia", "kind": "POS"},
-                {"name": "Pozzetto Ghiaccio Gazebo", "kind": "NEG"}
+                {"name": "Banco Bar Spiaggia", "kind": "POS"}
             ]
         },
         {
-            "id": "N07", "code": "07", "name": "PARCHEGGIO & FLUSSI", "subtitle": "Controllo Accessi, Valet & Sposi",
+            "id": "N08", "code": "08", "name": "PARCHEGGIO", "subtitle": "Viabilità, Accessi & Area Sposi",
             "sub_zones": ["Ingresso Principale", "Area Sosta Hotel", "Area Riservata Eventi"],
             "fridges": []
         }
@@ -508,61 +531,60 @@ def get_shared_store():
             key = f"{n['id']} || {fr['name']}"
             haccp_state[key] = {
                 "node_id": n["id"], "node_name": n["name"], "fridge_name": fr["name"],
-                "status": "PURPLE", "label": "DA CONTROLLARE", "by": "-", "pin": "-", "time": "--:--",
+                "status": "PURPLE", "label": "ATTESA", "by": "-", "pin": "-", "time": "--:--",
                 "kind": fr["kind"]
             }
 
     haccp_state["N01 || Cella Basi +4°C"].update({"status": "GREEN", "label": "+3.6°C", "by": "Marco S.", "pin": "1001", "time": "06:45"})
     haccp_state["N01 || Cella Semifreddi -18°C"].update({"status": "GREEN", "label": "-19.5°C", "by": "Marco S.", "pin": "1001", "time": "06:46"})
     haccp_state["N04 || Buffet Freddo Colazioni"].update({"status": "GREEN", "label": "+3.9°C", "by": "Jolly 01", "pin": "1004", "time": "06:50"})
-    haccp_state["N04 || Vetrina Yogurt/Salumi"].update({"status": "GREEN", "label": "+4.1°C", "by": "Jolly 01", "pin": "1004", "time": "06:51"})
-    haccp_state["N04 || Cella Carne +2°C"].update({"status": "GREEN", "label": "+2.4°C", "by": "Jolly 01", "pin": "1004", "time": "06:52"})
-    haccp_state["N04 || Cella Pesce 0°C"].update({"status": "YELLOW", "label": "+6.2°C", "by": "Jolly 01", "pin": "1004", "time": "06:55"})
+    haccp_state["N04 || Vetrina Yogurt & Latte"].update({"status": "GREEN", "label": "+4.1°C", "by": "Jolly 01", "pin": "1004", "time": "06:51"})
+    haccp_state["N05 || Cella Carne +2°C"].update({"status": "GREEN", "label": "+2.4°C", "by": "Matteo B.", "pin": "1005", "time": "06:52"})
+    haccp_state["N05 || Cella Pesce 0°C"].update({"status": "YELLOW", "label": "+6.2°C", "by": "Matteo B.", "pin": "1005", "time": "06:55"})
 
     today_d = datetime.now(timezone(timedelta(hours=1))).strftime("%d/%m/%Y")
     haccp_logs = [
-        {"date": today_d, "time": "06:45", "window": "MATTINA", "node": "01 // CASA MADRE", "fridge": "Cella Basi +4°C", "temp": "+3.6°C", "outcome": "CONFORME", "operator": "Marco S.", "pin_sig": "PIN #1001 (Verificato)"},
-        {"date": today_d, "time": "06:46", "window": "MATTINA", "node": "01 // CASA MADRE", "fridge": "Cella Semifreddi -18°C", "temp": "-19.5°C", "outcome": "CONFORME", "operator": "Marco S.", "pin_sig": "PIN #1001 (Verificato)"},
-        {"date": today_d, "time": "06:50", "window": "MATTINA", "node": "04 // RISTORANTE & SALE", "fridge": "Buffet Freddo Colazioni", "temp": "+3.9°C", "outcome": "CONFORME", "operator": "Jolly 01", "pin_sig": "PIN #1004 (Verificato)"},
-        {"date": today_d, "time": "06:51", "window": "MATTINA", "node": "04 // RISTORANTE & SALE", "fridge": "Vetrina Yogurt/Salumi", "temp": "+4.1°C", "outcome": "CONFORME", "operator": "Jolly 01", "pin_sig": "PIN #1004 (Verificato)"},
-        {"date": today_d, "time": "06:52", "window": "MATTINA", "node": "04 // RISTORANTE & SALE", "fridge": "Cella Carne +2°C", "temp": "+2.4°C", "outcome": "CONFORME", "operator": "Jolly 01", "pin_sig": "PIN #1004 (Verificato)"},
-        {"date": today_d, "time": "06:55", "window": "MATTINA", "node": "04 // RISTORANTE & SALE", "fridge": "Cella Pesce 0°C", "temp": "+6.2°C", "outcome": "PRE-ALLARME", "operator": "Jolly 01", "pin_sig": "PIN #1004 (Verificato)"}
+        {"date": today_d, "time": "06:45", "window": "MATTINA", "node": "01 - PASTICCERIA", "fridge": "Cella Basi +4°C", "temp": "+3.6°C", "outcome": "CONFORME", "operator": "Marco S.", "pin_sig": "PIN #1001 (Verificato)"},
+        {"date": today_d, "time": "06:46", "window": "MATTINA", "node": "01 - PASTICCERIA", "fridge": "Cella Semifreddi -18°C", "temp": "-19.5°C", "outcome": "CONFORME", "operator": "Marco S.", "pin_sig": "PIN #1001 (Verificato)"},
+        {"date": today_d, "time": "06:50", "window": "MATTINA", "node": "04 - SALA COLAZIONI", "fridge": "Buffet Freddo Colazioni", "temp": "+3.9°C", "outcome": "CONFORME", "operator": "Jolly 01", "pin_sig": "PIN #1004 (Verificato)"},
+        {"date": today_d, "time": "06:51", "window": "MATTINA", "node": "04 - SALA COLAZIONI", "fridge": "Vetrina Yogurt & Latte", "temp": "+4.1°C", "outcome": "CONFORME", "operator": "Jolly 01", "pin_sig": "PIN #1004 (Verificato)"},
+        {"date": today_d, "time": "06:52", "window": "MATTINA", "node": "05 - RISTORANTE", "fridge": "Cella Carne +2°C", "temp": "+2.4°C", "outcome": "CONFORME", "operator": "Matteo B.", "pin_sig": "PIN #1005 (Verificato)"},
+        {"date": today_d, "time": "06:55", "window": "MATTINA", "node": "05 - RISTORANTE", "fridge": "Cella Pesce 0°C", "temp": "+6.2°C", "outcome": "PRE-ALLARME", "operator": "Matteo B.", "pin_sig": "PIN #1005 (Verificato)"}
     ]
 
     return {
+        "schema_v": "v10_00_09",
         "nodes": nodes,
         "hub_meta": {
-            "code": "08",
-            "name": "REGIA & STAMPA",
-            "subtitle": "Titoli, Frighi, Staff & Registro ASL"
+            "code": "09",
+            "name": "REGIA",
+            "subtitle": "Configurazione, Staff, Eventi & Stampa ASL"
         },
         "haccp_state": haccp_state,
         "haccp_logs": haccp_logs,
-        "force_remind_demo": False,
         "figurine": [
+            {"pin": "1000", "nick": "Direzione", "role": "Coordinamento", "index_cost": 150, "node_id": "N00", "sub_zone": "Ufficio Direzione", "shift": "Giornaliero"},
             {"pin": "1001", "nick": "Marco S.", "role": "Chef Pasticcere", "index_cost": 120, "node_id": "N01", "sub_zone": "Laboratorio Pasticceria", "shift": "Mattina (07-15)"},
             {"pin": "1002", "nick": "Elena R.", "role": "Governante Piani", "index_cost": 100, "node_id": "N02", "sub_zone": "Piano 1", "shift": "Mattina (07-15)"},
-            {"pin": "1003", "nick": "Giulia F.", "role": "Ricevimento / Magazzino", "index_cost": 95, "node_id": "N03", "sub_zone": "Front Desk", "shift": "Mattina (07-15)"},
-            {"pin": "1004", "nick": "Jolly 01", "role": "Maître Verande", "index_cost": 110, "node_id": "N04", "sub_zone": "Sala Colazioni", "shift": "Mattina (07-15)"},
-            {"pin": "1007", "nick": "Matteo B.", "role": "Chef de Rang", "index_cost": 95, "node_id": "N04", "sub_zone": "Veranda 1", "shift": "Mattina (07-15)"},
-            {"pin": "1005", "nick": "Extra A", "role": "Barman", "index_cost": 90, "node_id": "N05", "sub_zone": "Banco Caffetteria", "shift": "Mattina (07-15)"},
-            {"pin": "1006", "nick": "DJ / Evento", "role": "Regia Gazebo", "index_cost": 150, "node_id": "N06", "sub_zone": "Gazebo Cerimonie", "shift": "Cena/Sera (18-02)"}
+            {"pin": "1003", "nick": "Giulia F.", "role": "Receptionist", "index_cost": 95, "node_id": "N03", "sub_zone": "Front Desk", "shift": "Mattina (07-15)"},
+            {"pin": "1004", "nick": "Jolly 01", "role": "Responsabile Colazioni", "index_cost": 110, "node_id": "N04", "sub_zone": "Buffet Centrale", "shift": "Mattina (07-15)"},
+            {"pin": "1005", "nick": "Matteo B.", "role": "Maître Ristorante", "index_cost": 115, "node_id": "N05", "sub_zone": "Veranda 1", "shift": "Pranzo/Sera"},
+            {"pin": "1006", "nick": "Extra A", "role": "Barman Terrazza", "index_cost": 90, "node_id": "N06", "sub_zone": "Terrazza Bar", "shift": "Mattina (07-15)"},
+            {"pin": "1007", "nick": "Bagnino / Regia", "role": "Presidio Spiaggia", "index_cost": 100, "node_id": "N07", "sub_zone": "Gazebo Cerimonie", "shift": "Giornaliero"}
         ],
-        # CODA SOS COMPLETAMENTE VUOTA ALL'AVVIO (NESSUN FALSO MESSAGGIO CORNETTI/LATTE)
         "sos_queue": [],
         "events": [
             {"id": "EV1", "title": "Matrimonio Rossi-Bianchi", "zone": "Gazebo -> Veranda Circolare", "pax": 130, "cake_time": "22:30", "phase": "1. Accoglienza / Rito"},
             {"id": "EV2", "title": "50° Anniversario", "zone": "Veranda Grande", "pax": 55, "cake_time": "23:00", "phase": "2. Aperitivo"}
-        ],
-        "alarm_counter": 0
+        ]
     }
 
 store = get_shared_store()
 
-# Sicurezza nel caso la cache precedente avesse ancora il vecchio SOS cornetti o mancasse hub_meta
-if "hub_meta" not in store:
-    store["hub_meta"] = {"code": "08", "name": "REGIA & STAMPA", "subtitle": "Titoli, Frighi, Staff & Registro ASL"}
-store["sos_queue"] = [s for s in store["sos_queue"] if "Cornetti" not in s.get("item", "")]
+# Allineamento automatico se il server aveva in memoria la vecchia mappa a 8 blocchi
+if store.get("schema_v") != "v10_00_09":
+    st.cache_resource.clear()
+    st.rerun()
 
 if "selected_node_id" not in st.session_state:
     st.session_state.selected_node_id = None
@@ -572,24 +594,23 @@ if "active_pin" not in st.session_state:
 now_it = get_italy_now()
 now_str = now_it.strftime("%H:%M")
 today_str = now_it.strftime("%d/%m/%Y")
-win_name, deadline_str, is_naturally_overdue = get_current_window_info(now_it)
-is_overdue = is_naturally_overdue or store["force_remind_demo"]
+win_name = get_current_window_info(now_it)
 
 unchecked_list = [v for v in store["haccp_state"].values() if v["status"] == "PURPLE"]
 total_fridges = len(store["haccp_state"])
 checked_fridges = total_fridges - len(unchecked_list)
 
-# --- INTESTAZIONE CON OROLOGIO LIVE ---
+# --- INTESTAZIONE PULITA ---
 st.markdown(f"""
 <div class="top-bar">
     <div class="brand-title">SOVEREIGN KINETIC ARCHITECTURE <span>// BOSCHETTO PRO</span></div>
-    <div class="brand-clock">🕒 ORA SISTEMA: {now_str}  |  FASCIA: {win_name} (LIMITE: {deadline_str})</div>
+    <div class="brand-clock">🕒 ORA SISTEMA: {now_str}  |  FASCIA ATTIVA: {win_name}</div>
 </div>
 """, unsafe_allow_html=True)
 
-c_pin, c_btn, c_dir, c_sim, c_sonar = st.columns([1.1, 1.0, 1.0, 1.3, 1.0])
+c_pin, c_btn, c_dir, c_sonar = st.columns([1.3, 1.1, 1.1, 1.2])
 with c_pin:
-    new_pin = st.text_input("PIN ACCESSO", value=st.session_state.active_pin, label_visibility="collapsed", placeholder="PIN (9999 Dir. | 1001 Staff)")
+    new_pin = st.text_input("PIN ACCESSO", value=st.session_state.active_pin, label_visibility="collapsed", placeholder="PIN (9999 Dir. | 1001..1007 Staff)")
 with c_btn:
     if st.button("CONFERMA PIN ↵", type="secondary", use_container_width=True) or (new_pin != st.session_state.active_pin):
         st.session_state.active_pin = new_pin.strip()
@@ -600,8 +621,6 @@ with c_dir:
         st.session_state.active_pin = "9999"
         st.session_state.selected_node_id = None
         st.rerun()
-with c_sim:
-    store["force_remind_demo"] = st.toggle("⏰ SIMULA SCADENZA FRIGHI", value=store["force_remind_demo"])
 with c_sonar:
     sonar_active = st.toggle("🔊 AUDIO TASTI & SONAR", value=True)
 
@@ -610,130 +629,145 @@ bind_global_tactile_audio(sonar_active)
 pin_input = st.session_state.active_pin
 
 # ==============================================================================
-# VISTA 1: DIREZIONE (PIN 9999) — PLANCIA TOUCH SIMMETRICA E DINAMICA
+# VISTA 1: DIREZIONE (PIN 9999) — 10 BLOCCHI AL CENTRO + RETTANGOLO VERTICALE A DESTRA
 # ==============================================================================
 if pin_input in ["9999", "0000"]:
     red_tiles = [v["fridge_name"] for v in store["haccp_state"].values() if v["status"] == "RED"]
     if red_tiles:
         st.markdown(f"<div class='alert-bar-crit'>🚨 ALLARME ROSSO GUASTO/TEMPERATURA: {', '.join(red_tiles)}</div>", unsafe_allow_html=True)
 
-    if unchecked_list and is_overdue:
-        missing_nodes = sorted(list(set(v["node_id"] for v in unchecked_list)))
-        st.markdown(
-            f"<div class='alert-bar-remind'>⏰ <b>REMIND CONTROLLO FRIGHI SCADUTO (Limite ore {deadline_str} superato):</b> "
-            f"Ci sono ancora <b>{len(unchecked_list)} frigoriferi non controllati</b> nei reparti: {', '.join(missing_nodes)}.</div>",
-            unsafe_allow_html=True
-        )
-
-    # IL BANNER SOS APPARE SOLO SE QUALCUNO HA DAVVERO MANDATO UN'EMERGENZA!
     if store["sos_queue"]:
         latest_sos = store["sos_queue"][-1]
         c_s1, c_s2 = st.columns([4.5, 1])
         with c_s1:
-            st.markdown(f"<div class='alert-bar-sos'>📦 SOS MAGAZZINO ({len(store['sos_queue'])}) — {latest_sos['from']} [ore {latest_sos['time']}]: {latest_sos['item']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='alert-bar-sos'>📦 RICHIESTA MAGAZZINO ({len(store['sos_queue'])}) — {latest_sos['from']} [ore {latest_sos['time']}]: {latest_sos['item']}</div>", unsafe_allow_html=True)
         with c_s2:
             if st.button("✖ Chiudi SOS", type="secondary", use_container_width=True):
                 store["sos_queue"].clear()
                 st.rerun()
 
     # --------------------------------------------------------------------------
-    # LIVELLO 0: LA COSTELLAZIONE TOUCH A 8 QUADRATI UGUALI
+    # LIVELLO 0: GRIGLIA CENTRALE (00..09) + RETTANGOLO VERTICALE A DESTRA
     # --------------------------------------------------------------------------
     if st.session_state.selected_node_id is None:
         tot_fig = len(store["figurine"])
         tot_sos = len(store["sos_queue"])
+        tot_logs = len(store["haccp_logs"])
 
-        st.markdown(f"""
-        <div class="kpi-bar">
-            <div class="kpi-box"><div class="kpi-lbl">Controlli HACCP ({win_name.split()[0]})</div><div class="kpi-num">{checked_fridges}/{total_fridges} FIRMATI</div></div>
-            <div class="kpi-box"><div class="kpi-lbl">Presidio Staff (Pallini Blu)</div><div class="kpi-num">{tot_fig} UNITA ATTIVE</div></div>
-            <div class="kpi-box"><div class="kpi-lbl">Richieste Magazzino</div><div class="kpi-num">{tot_sos} SOS APERTI</div></div>
-            <div class="kpi-box"><div class="kpi-lbl">Regia & Stampa ASL</div><div class="kpi-num">{len(store['haccp_logs'])} FIRME REGISTRATE</div></div>
-        </div>
-        """, unsafe_allow_html=True)
+        col_center, col_right = st.columns([3.1, 1.15], gap="medium")
 
-        row1 = st.columns(4)
-        row2 = st.columns(4)
-        grid_cols = row1 + row2
+        with col_center:
+            r1 = st.columns(3)
+            r2 = st.columns(3)
+            r3 = st.columns(3)
+            r4 = st.columns(3)
+            grid_slots = r1 + r2 + r3 + r4
 
-        color_palette = {
-            "GREEN":   {"bg": "#10b981", "border": "#34d399"},
-            "PURPLE":  {"bg": "#6b21a8", "border": "#a855f7"},
-            "OVERDUE": {"bg": "#ea580c", "border": "#fbbf24"},
-            "YELLOW":  {"bg": "#eab308", "border": "#fde047"},
-            "RED":     {"bg": "#ef4444", "border": "#fca5a5"}
-        }
+            color_palette = {
+                "GREEN":  {"bg": "#10b981", "border": "#34d399"},
+                "PURPLE": {"bg": "#6b21a8", "border": "#a855f7"},
+                "YELLOW": {"bg": "#eab308", "border": "#fde047"},
+                "RED":    {"bg": "#ef4444", "border": "#fca5a5"}
+            }
 
-        cards_payload = []
+            cards_payload = []
 
-        for idx, node in enumerate(store["nodes"]):
-            nid = node["id"]
-            n_staff = len([f for f in store["figurine"] if f["node_id"] == nid])
-            n_fridges = [v for v in store["haccp_state"].values() if v["node_id"] == nid]
+            for idx, node in enumerate(store["nodes"]):
+                nid = node["id"]
+                n_staff = len([f for f in store["figurine"] if f["node_id"] == nid])
+                n_fridges = [v for v in store["haccp_state"].values() if v["node_id"] == nid]
 
-            squares = []
-            for f in n_fridges:
-                if f["status"] == "PURPLE" and is_overdue:
-                    squares.append(color_palette["OVERDUE"])
+                squares = [color_palette[f["status"]] for f in n_fridges]
+                n_ok = sum(1 for f in n_fridges if f["status"] == "GREEN")
+                n_anom = sum(1 for f in n_fridges if f["status"] in ["YELLOW", "RED"])
+
+                if not n_fridges:
+                    haccp_txt = "SLOT ATTIVO"
+                    st_col = "#94a3b8"
+                elif n_anom > 0:
+                    haccp_txt = f"{n_anom} ANOMALIA"
+                    st_col = "#fbbf24"
+                elif n_ok < len(n_fridges):
+                    haccp_txt = f"{n_ok}/{len(n_fridges)}"
+                    st_col = "#c084fc"
                 else:
-                    squares.append(color_palette[f["status"]])
+                    haccp_txt = f"{n_ok}/{len(n_fridges)} OK"
+                    st_col = "#34d399"
 
-            n_unchecked = sum(1 for f in n_fridges if f["status"] == "PURPLE")
-            n_anom = sum(1 for f in n_fridges if f["status"] in ["YELLOW", "RED"])
+                marker = f"{node['code']} - {node['name']}"
+                cards_payload.append({
+                    "marker": marker,
+                    "title": marker,
+                    "subtitle": node["subtitle"],
+                    "squares": squares,
+                    "staff_count": n_staff,
+                    "haccp_txt": haccp_txt,
+                    "status_color": st_col
+                })
 
-            if not n_fridges:
-                haccp_txt = "NO FRIGHI"
-                st_col = "#94a3b8"
-            elif n_anom > 0:
-                haccp_txt = f"{n_anom} ANOMALIA"
-                st_col = "#fbbf24"
-            elif n_unchecked > 0 and is_overdue:
-                haccp_txt = f"REMIND ({n_unchecked})"
-                st_col = "#fb923c"
-            elif n_unchecked > 0:
-                haccp_txt = f"{len(n_fridges)-n_unchecked}/{len(n_fridges)} ATTIVO"
-                st_col = "#c084fc"
-            else:
-                haccp_txt = "100% OK"
-                st_col = "#34d399"
+                with grid_slots[idx]:
+                    if st.button(f"{marker}\n{node['subtitle']}", key=f"tile_{nid}", type="primary", use_container_width=True):
+                        st.session_state.selected_node_id = nid
+                        st.rerun()
 
-            marker = f"{node['code']} // {node['name']}"
+            # Blocco 09 - REGIA
+            hm = store["hub_meta"]
+            marker_09 = f"{hm['code']} - {hm['name']}"
             cards_payload.append({
-                "marker": marker,
-                "title": marker,
-                "subtitle": node["subtitle"],
-                "squares": squares,
-                "staff_count": n_staff,
-                "haccp_txt": haccp_txt,
-                "status_color": st_col
+                "marker": marker_09,
+                "title": marker_09,
+                "subtitle": hm["subtitle"],
+                "squares": [{"bg": "#0284c7", "border": "#38bdf8"} for _ in range(4)],
+                "staff_count": tot_fig,
+                "haccp_txt": f"{tot_logs} FIRME",
+                "status_color": "#38bdf8"
             })
-
-            with grid_cols[idx]:
-                if st.button(f"{marker}\n{node['subtitle']}", key=f"tile_{nid}", type="primary", use_container_width=True):
-                    st.session_state.selected_node_id = nid
+            with grid_slots[9]:
+                if st.button(f"{marker_09}\n{hm['subtitle']}", key="tile_HUB", type="primary", use_container_width=True):
+                    st.session_state.selected_node_id = "HUB_VAULT"
                     st.rerun()
 
-        # Blocco 08: Identico agli altri nelle dimensioni e con titolo dinamico personalizzabile!
-        hm = store["hub_meta"]
-        marker_08 = f"{hm['code']} // {hm['name']}"
-        cards_payload.append({
-            "marker": marker_08,
-            "title": marker_08,
-            "subtitle": hm["subtitle"],
-            "squares": [{"bg": "#0284c7", "border": "#38bdf8"} for _ in range(4)],
-            "staff_count": tot_fig,
-            "haccp_txt": f"{len(store['haccp_logs'])} FIRME",
-            "status_color": "#38bdf8"
-        })
-        with grid_cols[7]:
-            if st.button(f"{marker_08}\n{hm['subtitle']}", key="tile_HUB", type="primary", use_container_width=True):
-                st.session_state.selected_node_id = "HUB_VAULT"
-                st.rerun()
+            inject_matrix_into_touch_cards(cards_payload)
 
-        inject_matrix_into_touch_cards(cards_payload)
+        # GRANDE RETTANGOLO VERTICALE DI CONTROLLO A DESTRA
+        with col_right:
+            sos_txt = f"{tot_sos} APERTI" if tot_sos > 0 else "0 NESSUNA URGENZA"
+            st.markdown(f"""
+            <div class="right-tower">
+                <div class="tower-header">QUADRO SINOTTICO LIVE</div>
+                <div class="tower-item">
+                    <div class="tower-lbl">CONTROLLI HACCP ({win_name.split()[0]})</div>
+                    <div class="tower-val">{checked_fridges}/{total_fridges}</div>
+                    <div class="tower-sub">Unità frigorifere certificate in fascia</div>
+                </div>
+                <div class="tower-item">
+                    <div class="tower-lbl">PRESIDIO STAFF (PALLINI BLU)</div>
+                    <div class="tower-val">{tot_fig} UNITÀ ATTIVE</div>
+                    <div class="tower-sub">1 Pallino Blu = 1 Operatore in turno nel reparto</div>
+                </div>
+                <div class="tower-item">
+                    <div class="tower-lbl">RICHIESTE MAGAZZINO (SOS)</div>
+                    <div class="tower-val">{sos_txt}</div>
+                    <div class="tower-sub">Segnalazioni di rifornimento dai reparti</div>
+                </div>
+                <div class="tower-item">
+                    <div class="tower-lbl">REGIA & STAMPA ASL</div>
+                    <div class="tower-val">{tot_logs} FIRME</div>
+                    <div class="tower-sub">Letture timbrate con ora e PIN nel registro</div>
+                </div>
+                <div class="tower-legend">
+                    <b>LEGENDA MATRICE NEI BLOCCHI:</b><br>
+                    🟩 <b>Verde:</b> Temperatura conforme<br>
+                    🟪 <b>Viola:</b> In attesa di lettura<br>
+                    🟨 <b>Giallo:</b> Pre-allarme termico<br>
+                    🟥 <b>Rosso:</b> Fuori soglia / Guasto<br>
+                    🔵 <b>Pallino Blu:</b> Operatore presente
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
     # --------------------------------------------------------------------------
-    # VISTA 08: TITOLI DINAMICI, STAMPA REGISTRO ASL, FRIGHI, STAFF & EVENTI
+    # VISTA 09: REGIA (TITOLI DINAMICI, STAMPA REGISTRO ASL, FRIGO, STAFF, EVENTI)
     # --------------------------------------------------------------------------
     elif st.session_state.selected_node_id == "HUB_VAULT":
         if st.button("⬅ TORNA ALLA COSTELLAZIONE PRINCIPALE", type="secondary", use_container_width=True):
@@ -741,39 +775,36 @@ if pin_input in ["9999", "0000"]:
             st.rerun()
 
         hm = store["hub_meta"]
-        st.markdown(f"### {hm['code']} // {hm['name']} — {hm['subtitle']}")
+        st.markdown(f"### {hm['code']} - {hm['name']} — {hm['subtitle']}")
 
         tab_titles, tab_print, tab_fr, tab_staff, tab_ev = st.tabs([
-            "✏️ 1. PERSONALIZZA TITOLI BLOCCHI",
+            "✏️ 1. PERSONALIZZA TITOLI (00-09)",
             "🖨️ 2. STAMPA REGISTRO ASL",
-            "❄️ 3. CONFIGURA FRIGORIFERI",
+            "❄️ 3. CONFIGURA UNITÀ FRIGO",
             "👥 4. GESTIONE DIPENDENTI & PIN",
             "🥂 5. AGENDA EVENTI"
         ])
 
         with tab_titles:
-            st.markdown("##### ✏️ MODIFICA IN TEMPO REALE I TITOLI E I SOTTOTITOLI DEGLI 8 QUADRATI")
-            st.caption("Scrivi qui i tuoi titoli personalizzati per ciascun blocco della plancia e premi Salva.")
-
+            st.markdown("##### ✏️ MODIFICA IN TEMPO REALE I TITOLI E I SOTTOTITOLI DEI BLOCCHI (00 — 09)")
             for idx_n, nd in enumerate(store["nodes"]):
                 ct1, ct2, ct3 = st.columns([0.6, 1.8, 2.6])
                 nd["code"] = ct1.text_input("Cod.", value=nd["code"], key=f"ed_c_{nd['id']}")
-                nd["name"] = ct2.text_input(f"Titolo Blocco {idx_n+1}", value=nd["name"], key=f"ed_n_{nd['id']}")
-                nd["subtitle"] = ct3.text_input(f"Sottotitolo {idx_n+1}", value=nd["subtitle"], key=f"ed_s_{nd['id']}")
+                nd["name"] = ct2.text_input(f"Titolo {nd['code']}", value=nd["name"], key=f"ed_n_{nd['id']}")
+                nd["subtitle"] = ct3.text_input(f"Sottotitolo {nd['code']}", value=nd["subtitle"], key=f"ed_s_{nd['id']}")
                 if nd.get("sub_zones") is not None:
                     sz_str = st.text_input(f"Sottozone di {nd['name']} (separate da virgola)", value=", ".join(nd["sub_zones"]), key=f"ed_sz_{nd['id']}")
                     nd["sub_zones"] = [s.strip() for s in sz_str.split(",") if s.strip()]
                 st.divider()
 
-            st.markdown("##### ✏️ TITOLO DELL'OTTAVO BLOCCO (REGIA / IMPOSTAZIONI)")
             ch1, ch2, ch3 = st.columns([0.6, 1.8, 2.6])
-            hm["code"] = ch1.text_input("Cod. 08", value=hm["code"], key="ed_hc")
-            hm["name"] = ch2.text_input("Titolo Blocco 08", value=hm["name"], key="ed_hn")
-            hm["subtitle"] = ch3.text_input("Sottotitolo Blocco 08", value=hm["subtitle"], key="ed_hs")
+            hm["code"] = ch1.text_input("Cod. 09", value=hm["code"], key="ed_hc")
+            hm["name"] = ch2.text_input("Titolo 09", value=hm["name"], key="ed_hn")
+            hm["subtitle"] = ch3.text_input("Sottotitolo 09", value=hm["subtitle"], key="ed_hs")
 
             if st.button("💾 SALVA TUTTI I NUOVI TITOLI E TORNA ALLA PLANCIA", type="secondary", use_container_width=True):
                 st.session_state.selected_node_id = None
-                st.toast("Titoli dei blocchi aggiornati!")
+                st.toast("Titoli aggiornati!")
                 st.rerun()
 
         with tab_print:
@@ -819,7 +850,7 @@ if pin_input in ["9999", "0000"]:
             <h2>REGISTRO UFFICIALE AUTOCONTROLLO TEMPERATURE HACCP</h2>
             <div><b>Struttura:</b> BOSCHETTO PRO  |  <b>Data Emissione:</b> {today_str} ore {now_str}</div>
             <table>
-                <thead><tr><th>Data</th><th>Ora Sistema</th><th>Fascia</th><th>Reparto</th><th>Frigorifero</th><th>Temp.</th><th>Esito</th><th>Firmatario</th><th>Certificazione PIN</th></tr></thead>
+                <thead><tr><th>Data</th><th>Ora Sistema</th><th>Fascia</th><th>Reparto</th><th>Unità Frigo</th><th>Temp.</th><th>Esito</th><th>Firmatario</th><th>Certificazione PIN</th></tr></thead>
                 <tbody>{rows_html}</tbody>
             </table>
             <div class="sig-box">
@@ -854,26 +885,26 @@ if pin_input in ["9999", "0000"]:
             with cp3:
                 if st.button("🔄 INIZIA NUOVO GIRO (RIPORTA QUADRETTI IN VIOLA)", type="secondary", use_container_width=True):
                     for k in store["haccp_state"]:
-                        store["haccp_state"][k].update({"status": "PURPLE", "label": "DA CONTROLLARE", "by": "-", "pin": "-", "time": "--:--"})
+                        store["haccp_state"][k].update({"status": "PURPLE", "label": "ATTESA", "by": "-", "pin": "-", "time": "--:--"})
                     st.rerun()
 
         with tab_fr:
-            st.markdown("##### ➕ AGGIUNGI O RIMUOVI FRIGORIFERI IN AUTONOMIA")
+            st.markdown("##### ➕ AGGIUNGI O RIMUOVI UNITÀ FRIGO IN AUTONOMIA")
             cf1, cf2, cf3 = st.columns(3)
             node_map = {f"{n['code']} - {n['name']}": n for n in store["nodes"]}
             fr_node_lbl = cf1.selectbox("Scegli Reparto", list(node_map.keys()))
             target_node = node_map[fr_node_lbl]
-            fr_new_name = cf2.text_input("Nome Frigorifero (es. Frigo Vini Veranda 2)")
+            fr_new_name = cf2.text_input("Nome Unità Frigo (es. Frigo Vini Veranda 2)")
             fr_new_kind = cf3.selectbox("Tipo Temperatura", ["POS (+0°C / +5°C)", "NEG (-18°C / -22°C)"])
 
-            if st.button("AGGIUNGI FRIGORIFERO AL REPARTO", type="secondary"):
+            if st.button("AGGIUNGI UNITÀ FRIGO AL REPARTO", type="secondary"):
                 if fr_new_name:
                     k_code = "POS" if "POS" in fr_new_kind else "NEG"
                     target_node["fridges"].append({"name": fr_new_name.strip(), "kind": k_code})
                     store["haccp_state"][f"{target_node['id']} || {fr_new_name.strip()}"] = {
                         "node_id": target_node["id"], "node_name": target_node["name"],
                         "fridge_name": fr_new_name.strip(),
-                        "status": "PURPLE", "label": "DA CONTROLLARE", "by": "-", "pin": "-", "time": "--:--",
+                        "status": "PURPLE", "label": "ATTESA", "by": "-", "pin": "-", "time": "--:--",
                         "kind": k_code
                     }
                     st.rerun()
@@ -890,7 +921,7 @@ if pin_input in ["9999", "0000"]:
         with tab_staff:
             st.markdown("##### ➕ CREA NUOVO DIPENDENTE E ASSEGNA PIN PERSONALE DI FIRMA")
             cs1, cs2, cs3 = st.columns(3)
-            ns_nick = cs1.text_input("Nome e Cognome / Nickname (es. Matteo B.)")
+            ns_nick = cs1.text_input("Nome e Cognome / Nickname (es. Luca M.)")
             ns_role = cs2.text_input("Mansione (es. Chef de Rang)")
             ns_pin = cs3.text_input("PIN Personale a 4 cifre (es. 1008)")
 
@@ -942,7 +973,7 @@ if pin_input in ["9999", "0000"]:
                     st.rerun()
 
     # --------------------------------------------------------------------------
-    # LIVELLO 1: INTERNO DEL SINGOLO REPARTO (N01..N07) CON MODIFICA RAPIDA TITOLO
+    # LIVELLO 1: INTERNO DEL SINGOLO REPARTO (00..08)
     # --------------------------------------------------------------------------
     else:
         nid = st.session_state.selected_node_id
@@ -952,7 +983,7 @@ if pin_input in ["9999", "0000"]:
             st.session_state.selected_node_id = None
             st.rerun()
 
-        st.markdown(f"### {node['code']} // {node['name']} — {node['subtitle']}")
+        st.markdown(f"### {node['code']} - {node['name']} — {node['subtitle']}")
 
         with st.expander("✏️ Rinomina questo Blocco o le sue Sottozone al volo"):
             rn1, rn2 = st.columns(2)
@@ -970,21 +1001,16 @@ if pin_input in ["9999", "0000"]:
         col_haccp, col_ops = st.columns([1.6, 1.4])
 
         with col_haccp:
-            st.markdown(f"##### DETTAGLIO FRIGORIFERI — FASCIA {win_name} (Ora Sistema: {now_str})")
-            st.caption("VIOLA: Da Controllare  |  ARANCIO: In Ritardo (Remind!)  |  VERDE: Regolare  |  GIALLO: Pre-Allarme  |  ROSSO: Guasto")
+            st.markdown(f"##### UNITÀ FRIGO — FASCIA {win_name} (Ora Sistema: {now_str})")
+            st.caption("VIOLA: In Attesa  |  VERDE: Regolare  |  GIALLO: Pre-Allarme  |  ROSSO: Guasto")
             node_fridges = [v for k, v in store["haccp_state"].items() if v["node_id"] == nid]
             if not node_fridges:
-                st.caption("Nessuna unità frigorifera in questo reparto.")
+                st.info("Slot strategico libero da unità frigorifere. Puoi aggiungere unità o sottozone in qualsiasi momento.")
             else:
                 tiles_html = "<div class='haccp-grid'>"
                 for st_data in node_fridges:
-                    if st_data["status"] == "PURPLE" and is_overdue:
-                        css_class = "tile-overdue"
-                        val_txt = "⏰ IN RITARDO!"
-                    else:
-                        css_class = {"PURPLE": "tile-purple", "GREEN": "tile-green", "YELLOW": "tile-yellow", "RED": "tile-red"}[st_data["status"]]
-                        val_txt = st_data["label"]
-
+                    css_class = {"PURPLE": "tile-purple", "GREEN": "tile-green", "YELLOW": "tile-yellow", "RED": "tile-red"}[st_data["status"]]
+                    val_txt = st_data["label"]
                     tiles_html += (
                         f"<div class='haccp-tile {css_class}'>"
                         f"<div class='tile-title'>{st_data['fridge_name']}</div>"
@@ -1015,7 +1041,7 @@ if pin_input in ["9999", "0000"]:
             node_sos = [s for s in store["sos_queue"] if s["node_id"] == nid]
             if node_sos:
                 st.divider()
-                st.markdown("##### RICHIESTE SOS MAGAZZINO")
+                st.markdown("##### RICHIESTE MAGAZZINO")
                 for req in node_sos:
                     st.warning(f"Ore {req['time']} — {req['item']}")
                 if st.button("Segna SOS come Evasi", type="secondary", use_container_width=True):
@@ -1023,7 +1049,7 @@ if pin_input in ["9999", "0000"]:
                     st.rerun()
 
 # ==============================================================================
-# VISTA 2: TERMINALE OPERATORE TOUCH (PIN 1001, 1004...) CON FIRMA CERTIFICATA
+# VISTA 2: TERMINALE OPERATORE TOUCH (PIN 1001..1007)
 # ==============================================================================
 else:
     user = next((f for f in store["figurine"] if f["pin"] == pin_input), None)
@@ -1037,24 +1063,17 @@ else:
         my_unchecked = [v["fridge_name"] for k, v in store["haccp_state"].items() if v["node_id"] == user["node_id"] and v["status"] == "PURPLE"]
 
         if my_unchecked:
-            if is_overdue:
-                st.markdown(
-                    f"<div class='alert-bar-remind'>⏰ <b>REMIND URGENTE PER {user['nick'].upper()} — CONTROLLO FRIGHI IN RITARDO!</b><br>"
-                    f"Unità da firmare subito: <b>{', '.join(my_unchecked)}</b></div>",
-                    unsafe_allow_html=True
-                )
-            else:
-                st.info(f"📋 Frigoriferi da controllare entro le ore {deadline_str}: {', '.join(my_unchecked)}")
+            st.info(f"📋 Unità Frigo in attesa di firma: {', '.join(my_unchecked)}")
         elif my_fridges:
-            st.success("✔️ Tutti i frigoriferi del tuo reparto sono stati firmati in questa fascia oraria!")
+            st.success("✔️ Tutte le unità frigo del tuo reparto sono state firmate!")
 
         if my_fridges:
             st.markdown(f"##### 1. RILEVAZIONE E FIRMA ELETTRONICA TEMPERATURA (Orario Certificato: {now_str})")
-            sel_key = st.selectbox("Seleziona Unità Frigorifera", my_fridges, format_func=lambda x: f"{x.split(' || ')[1]}  [{store['haccp_state'][x]['label']} - ore {store['haccp_state'][x]['time']}]")
+            sel_key = st.selectbox("Seleziona Unità Frigo", my_fridges, format_func=lambda x: f"{x.split(' || ')[1]}  [{store['haccp_state'][x]['label']} - ore {store['haccp_state'][x]['time']}]")
             fr_info = store["haccp_state"][sel_key]
             default_t = 3.0 if fr_info["kind"] == "POS" else -19.0
             temp_val = st.slider("Temperatura Letta sul Display (°C)", -28.0, 15.0, default_t, 0.5)
-            is_broken = st.checkbox("Segnala Anomalia / Frigorifero GUASTO")
+            is_broken = st.checkbox("Segnala Anomalia / Unità Frigo GUASTA")
             confirm_check = st.checkbox(f"✔️ Dichiaro di aver verificato visivamente il display (Firma Elettronica: {user['nick']} - PIN #{user['pin']})", value=True)
 
             if st.button(f"✍️ APPLICA FIRMA E TIMBRA ORE {now_str}", type="secondary", use_container_width=True):
@@ -1074,29 +1093,27 @@ else:
                         "date": today_str,
                         "time": now_str,
                         "window": win_name.split()[0],
-                        "node": f"{user_node['code']} // {user_node['name']}",
+                        "node": f"{user_node['code']} - {user_node['name']}",
                         "fridge": fr_info["fridge_name"],
                         "temp": label_text,
                         "outcome": outcome_map[status_color],
                         "operator": user["nick"],
                         "pin_sig": f"PIN #{user['pin']} (Verificato)"
                     })
-                    if status_color in ["RED", "YELLOW"]:
-                        store["alarm_counter"] += 1
                     st.toast(f"Firmato da {user['nick']} alle {now_str}: {label_text}")
                     st.rerun()
 
         st.divider()
         st.markdown("##### 2. RICHIESTA URGENTE MAGAZZINO (SOS)")
-        sos_item = st.text_input("Cosa manca nel reparto?")
-        if st.button(f"INVIA SOS MAGAZZINO (ORE {now_str})", type="secondary", use_container_width=True):
+        sos_item = st.text_input("Articolo / Rifornimento richiesto:")
+        if st.button(f"INVIA RICHIESTA MAGAZZINO (ORE {now_str})", type="secondary", use_container_width=True):
             if sos_item:
                 store["sos_queue"].append({
                     "time": now_str,
                     "node_id": user["node_id"],
-                    "from": f"{user_node['code']}. {user_node['name']}",
+                    "from": f"{user_node['code']} - {user_node['name']}",
                     "item": sos_item,
                     "status": "Richiesto"
                 })
-                st.toast("SOS inviato!")
+                st.toast("Richiesta inviata!")
                 st.rerun()
