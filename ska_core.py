@@ -24,15 +24,15 @@ def get_current_window_info(now_dt):
     else:
         return "SERA (19:00-03:00)"
 
-# --- CSS GRIGLIA QUADRATA STILE EXCEL + VERDE SMERALDO E BLU NOTTE ---
+# --- CSS GRIGLIA QUADRATA PURA + ZERO EMOJI SPORCHE ---
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
 
 header[data-testid="stHeader"] { background: transparent !important; }
 
 .stApp {
-    background-color: #060a10 !important;
+    background-color: #05080e !important;
     color: #e2e8f0 !important;
     font-family: 'Inter', sans-serif !important;
     -webkit-tap-highlight-color: transparent;
@@ -44,7 +44,6 @@ header[data-testid="stHeader"] { background: transparent !important; }
     max-width: 1380px !important;
 }
 
-/* Riduce lo spazio verticale di Streamlit per tenere le 5 righe dentro l'altezza esatta del quadrato */
 div[data-testid="stVerticalBlock"] > div {
     gap: 0.25rem !important;
 }
@@ -74,19 +73,17 @@ div[data-testid="stVerticalBlock"] > div {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.78rem;
     color: #10b981;
-    background: #0b1320;
+    background: #09121e;
     border: 1px solid #10b98155;
     padding: 4px 12px;
     border-radius: 3px;
 }
 
-/* LIVELLO 1: VERO QUADRATO STILE GRIGLIA EXCEL (216px FISSI, GIUSTIFICATO A SINISTRA, ACCENTO SMERALDO) */
+/* LIVELLO 1: QUADRATI PURI E PULITI (216px FISSI) */
 div.stButton > button[kind="primary"] {
-    background: linear-gradient(145deg, #0b1424 0%, #0f1c30 100%) !important;
-    border: 1px solid #1e3a5f !important;
-    border-left: 4px solid #10b981 !important;
-    border-top: 2px solid #38bdf8 !important;
-    border-radius: 3px !important;
+    background: linear-gradient(150deg, #0b1320 0%, #0e192b 100%) !important;
+    border: 1px solid #1e293b !important;
+    border-radius: 4px !important;
     height: 216px !important;
     min-height: 216px !important;
     max-height: 216px !important;
@@ -95,39 +92,23 @@ div.stButton > button[kind="primary"] {
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    align-items: flex-start !important;
+    align-items: stretch !important;
     text-align: left !important;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5) !important;
     margin: 0 !important;
-    transition: background 0.12s ease, border-color 0.12s ease !important;
+    transition: transform 0.08s ease, border-color 0.15s ease, background 0.15s ease !important;
 }
 div.stButton > button[kind="primary"]:hover {
-    background: linear-gradient(145deg, #102038 0%, #0d2824 100%) !important;
-    border-color: #10b981 !important;
+    background: linear-gradient(150deg, #111e32 0%, #15253d 100%) !important;
+    border-color: #38bdf8 !important;
 }
 div.stButton > button[kind="primary"]:active {
     transform: scale(0.98) !important;
 }
-div.stButton > button[kind="primary"] p {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 1.05rem !important;
-    font-weight: 700 !important;
-    color: #f8fafc !important;
-    letter-spacing: 0.05em !important;
-    line-height: 1.4 !important;
-    white-space: pre-line !important;
-    text-align: left !important;
-    margin: 0 !important;
-    width: 100% !important;
-}
-div.stButton > button[kind="primary"] p::first-line {
-    font-size: 1.12rem !important;
-    color: #ffffff !important;
-}
 
-/* LIVELLO 2: LE 5 RIGHE CHE OCCUPANO ESATTAMENTE LO STESSO QUADRATO (216px TOTALI, ZERO DISALLINEAMENTO) */
+/* LIVELLO 2: LE 5 RIGHE CHE OCCUPANO ESATTAMENTE LO STESSO QUADRATO (216px TOTALI) */
 div.stButton > button[kind="secondary"] {
-    background: #0c1726 !important;
+    background: #0b1523 !important;
     color: #e2e8f0 !important;
     border: 1px solid #1e3a5f !important;
     border-left: 3.5px solid #10b981 !important;
@@ -154,10 +135,10 @@ div.stButton > button[kind="secondary"]:hover {
     border-color: #34d399 !important;
 }
 
-/* RETTANGOLO VERTICALE DI RIEPILOGO A DESTRA CON TOCCHI VERDE SMERALDO */
+/* RETTANGOLO VERTICALE DI RIEPILOGO A DESTRA */
 .right-tower {
-    background: linear-gradient(180deg, #0b1424 0%, #08101c 100%);
-    border: 1px solid #1e3a5f;
+    background: linear-gradient(180deg, #0b1320 0%, #070d17 100%);
+    border: 1px solid #1e293b;
     border-top: 3px solid #10b981;
     border-radius: 4px;
     padding: 18px 16px;
@@ -168,46 +149,54 @@ div.stButton > button[kind="secondary"]:hover {
 }
 .tower-header {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 700;
     color: #10b981;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     border-bottom: 1px solid #1e293b;
     padding-bottom: 10px;
     margin-bottom: 12px;
 }
 .tower-item {
-    background: #060b13;
+    background: #060a11;
     border: 1px solid #1e293b;
-    border-left: 3.5px solid #38bdf8;
+    border-left: 3px solid #38bdf8;
     border-radius: 3px;
     padding: 12px 14px;
     margin-bottom: 10px;
 }
 .tower-item-emerald {
-    background: #061310;
+    background: #06110e;
     border: 1px solid #064e3b;
-    border-left: 3.5px solid #10b981;
+    border-left: 3px solid #10b981;
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+}
+.tower-item-amber {
+    background: #141007;
+    border: 1px solid #78350f;
+    border-left: 3px solid #f59e0b;
     border-radius: 3px;
     padding: 12px 14px;
     margin-bottom: 10px;
 }
 .tower-lbl {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
+    font-size: 0.64rem;
     color: #94a3b8;
     text-transform: uppercase;
 }
 .tower-val {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.3rem;
+    font-size: 1.28rem;
     font-weight: 700;
     color: #ffffff;
     margin-top: 3px;
 }
 .tower-sub {
-    font-size: 0.70rem;
-    color: #10b981;
+    font-size: 0.68rem;
+    color: #64748b;
     margin-top: 2px;
     font-family: 'JetBrains Mono', monospace;
 }
@@ -250,13 +239,13 @@ div.stButton > button[kind="secondary"]:hover {
 
 @media (max-width: 768px) {
     .block-container { padding-top: 0.8rem !important; padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
-    div.stButton > button[kind="primary"] { height: 180px !important; min-height: 180px !important; max-height: 180px !important; }
+    div.stButton > button[kind="primary"] { height: 170px !important; min-height: 170px !important; max-height: 170px !important; }
     .haccp-tile { width: 48% !important; }
 }
 </style>
 """, unsafe_allow_html=True)
 
-# --- MOTORE AUDIO TATTICO COMPATIBILE CON ANDROID / iOS / DESKTOP ---
+# --- MOTORE AUDIO TATTICO ---
 def bind_global_tactile_audio(enabled=True):
     en_flag = "true" if enabled else "false"
     js = f"""
@@ -341,6 +330,61 @@ def bind_global_tactile_audio(enabled=True):
     """
     components.html(js, height=0, width=0)
 
+# --- DISEGNO ARCHITETTONICO PURO DEI QUADRATI (SENZA PALLINI VERDI O SCRITTE "5 SOTTOMENU") ---
+def style_architectural_squares(cards_payload):
+    payload_json = json.dumps(cards_payload)
+    js = f"""
+    <script>
+    (function() {{
+        const cards = {payload_json};
+        function paintCleanSquares() {{
+            const doc = window.parent.document;
+            const buttons = doc.querySelectorAll('button[kind="primary"]');
+            buttons.forEach(btn => {{
+                const rawText = (btn.innerText || "").trim();
+                cards.forEach(c => {{
+                    if (rawText === c.name || btn.dataset.sqName === c.name) {{
+                        btn.dataset.sqName = c.name;
+                        btn.style.borderLeft = `4px solid ${{c.accent}}`;
+                        btn.style.borderTop = `2px solid ${{c.accent}}88`;
+                        btn.style.background = c.bg_grad;
+
+                        // Micro-segmenti LED minimali sul fondo del quadrato
+                        let barsHtml = '';
+                        if (c.bars && c.bars.length > 0) {{
+                            c.bars.forEach(bCol => {{
+                                barsHtml += `<span style="display:inline-block;width:16px;height:6px;border-radius:1px;background:${{bCol}};box-shadow:0 0 6px ${{bCol}}88;"></span>`;
+                            }});
+                        }} else {{
+                            for (let i=0; i<5; i++) {{
+                                barsHtml += `<span style="display:inline-block;width:16px;height:4px;border-radius:1px;background:${{c.accent}}55;"></span>`;
+                            }}
+                        }}
+
+                        btn.innerHTML = `
+                        <div style="width:100%;height:178px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;pointer-events:none;">
+                            <div>
+                                <div style="font-family:'Inter',sans-serif;font-size:1.22rem;font-weight:800;color:#ffffff;letter-spacing:0.06em;text-transform:uppercase;">${{c.name}}</div>
+                                <div style="width:32px;height:2px;background:${{c.accent}};margin-top:8px;"></div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,0.06);padding-top:10px;">
+                                <div style="display:flex;gap:4px;flex-wrap:wrap;">${{barsHtml}}</div>
+                                <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:${{c.accent}};font-weight:700;letter-spacing:0.05em;">${{c.tag}}</div>
+                            </div>
+                        </div>
+                        `;
+                    }}
+                }});
+            }});
+        }}
+        paintCleanSquares();
+        setTimeout(paintCleanSquares, 80);
+        setTimeout(paintCleanSquares, 280);
+    }})();
+    </script>
+    """
+    components.html(js, height=0, width=0)
+
 def evaluate_fridge_status(fridge_type, temp_val, is_broken=False):
     if is_broken:
         return "RED", "GUASTO"
@@ -353,18 +397,18 @@ def evaluate_fridge_status(fridge_type, temp_val, is_broken=False):
         elif 5.5 < temp_val <= 8.0 or temp_val < -1.0: return "YELLOW", f"{temp_val:+.1f}°C"
         else: return "RED", f"{temp_val:+.1f}°C"
 
-# --- ARCHITETTURA QUADRATA PURA SENZA NUMERI (DIREZIONE, PASTICCERIA, CAMERE...) ---
+# --- ARCHITETTURA CON PALETTE CROMATICA PER AREE ---
 @st.cache_resource
 def get_shared_store():
     nodes = [
         {
-            "id": "N00", "name": "DIREZIONE",
+            "id": "N00", "name": "DIREZIONE", "accent": "#f59e0b", "bg": "linear-gradient(145deg, #161209 0%, #0d1320 100%)",
             "sub_zones": ["Ufficio Direzione", "Amministrazione"],
             "fridges": [],
             "tasks": [{"title": "Verifica Quadro Sinottico", "done": True}]
         },
         {
-            "id": "N01", "name": "PASTICCERIA",
+            "id": "N01", "name": "PASTICCERIA", "accent": "#10b981", "bg": "linear-gradient(145deg, #071914 0%, #0b1422 100%)",
             "sub_zones": ["Laboratorio Pasticceria", "Zona Forni"],
             "fridges": [
                 {"name": "Cella Basi +4°C", "kind": "POS"},
@@ -379,7 +423,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N02", "name": "CAMERE",
+            "id": "N02", "name": "CAMERE", "accent": "#38bdf8", "bg": "linear-gradient(145deg, #081526 0%, #0d182a 100%)",
             "sub_zones": ["Piano 1", "Piano 2", "Office Biancheria"],
             "fridges": [
                 {"name": "Frigo Office Piano 1", "kind": "POS"},
@@ -391,7 +435,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N03", "name": "RECEPTION",
+            "id": "N03", "name": "RECEPTION", "accent": "#38bdf8", "bg": "linear-gradient(145deg, #081526 0%, #0d182a 100%)",
             "sub_zones": ["Front Desk", "Accoglienza Ospiti"],
             "fridges": [],
             "tasks": [
@@ -400,7 +444,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N04", "name": "SALA COLAZIONI",
+            "id": "N04", "name": "SALA COLAZIONI", "accent": "#10b981", "bg": "linear-gradient(145deg, #071914 0%, #0b1422 100%)",
             "sub_zones": ["Buffet Centrale", "Sala Colazioni", "Veranda Colazioni"],
             "fridges": [
                 {"name": "Buffet Freddo Colazioni", "kind": "POS"},
@@ -413,7 +457,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N05", "name": "RISTORANTE",
+            "id": "N05", "name": "RISTORANTE", "accent": "#10b981", "bg": "linear-gradient(145deg, #071914 0%, #0b1422 100%)",
             "sub_zones": ["Cucina Centrale", "Sala Interna", "Veranda 1", "Veranda 2", "Veranda Grande", "Veranda Circolare"],
             "fridges": [
                 {"name": "Cella Carne +2°C", "kind": "POS"},
@@ -429,7 +473,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N06", "name": "BAR",
+            "id": "N06", "name": "BAR", "accent": "#10b981", "bg": "linear-gradient(145deg, #071914 0%, #0b1422 100%)",
             "sub_zones": ["Banco Caffetteria", "Terrazza Bar", "Cocktail Station"],
             "fridges": [
                 {"name": "Banco Bar 1 (Latte)", "kind": "POS"},
@@ -443,7 +487,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N07", "name": "SPIAGGIA",
+            "id": "N07", "name": "SPIAGGIA", "accent": "#a855f7", "bg": "linear-gradient(145deg, #150d24 0%, #0c1424 100%)",
             "sub_zones": ["Gazebo Cerimonie", "Ombrelloni & Tende", "Chiosco Spiaggia"],
             "fridges": [
                 {"name": "Frigo Champagne Gazebo", "kind": "POS"},
@@ -455,7 +499,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N08", "name": "PARCHEGGIO",
+            "id": "N08", "name": "PARCHEGGIO", "accent": "#a855f7", "bg": "linear-gradient(145deg, #150d24 0%, #0c1424 100%)",
             "sub_zones": ["Ingresso Principale", "Area Sosta Hotel", "Area Sposi"],
             "fridges": [],
             "tasks": [
@@ -492,7 +536,7 @@ def get_shared_store():
     ]
 
     return {
-        "schema_v": "v13_excel_emerald_squares",
+        "schema_v": "v14_pure_color_squares",
         "nodes": nodes,
         "haccp_state": haccp_state,
         "haccp_logs": haccp_logs,
@@ -514,7 +558,7 @@ def get_shared_store():
 
 store = get_shared_store()
 
-if store.get("schema_v") != "v13_excel_emerald_squares":
+if store.get("schema_v") != "v14_pure_color_squares":
     st.cache_resource.clear()
     st.rerun()
 
@@ -540,7 +584,7 @@ checked_fridges = total_fridges - len(unchecked_list)
 st.markdown(f"""
 <div class="top-bar">
     <div class="brand-title">SOVEREIGN KINETIC ARCHITECTURE <span>// BOSCHETTO PRO</span></div>
-    <div class="brand-clock">🟢 {now_str}  |  {win_name}</div>
+    <div class="brand-clock">{now_str}  |  {win_name}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -554,13 +598,13 @@ with c_btn:
         st.session_state.opened_submenu_node = None
         st.rerun()
 with c_dir:
-    if st.button("PIANTA PRINCIPALE 🏛️", type="secondary", use_container_width=True):
+    if st.button("PIANTA PRINCIPALE", type="secondary", use_container_width=True):
         st.session_state.active_pin = "9999"
         st.session_state.expanded_node_id = None
         st.session_state.opened_submenu_node = None
         st.rerun()
 with c_sonar:
-    sonar_active = st.toggle("🔊 AUDIO TASTI", value=True)
+    sonar_active = st.toggle("AUDIO TASTI", value=True)
 
 bind_global_tactile_audio(sonar_active)
 
@@ -572,7 +616,7 @@ pin_input = st.session_state.active_pin
 if pin_input in ["9999", "0000"]:
 
     # --------------------------------------------------------------------------
-    # PIANTA PRINCIPALE: GRIGLIA QUADRATA STILE EXCEL + COLONNA DESTRA
+    # PIANTA PRINCIPALE: QUADRATI PURI CON CODIFICA COLORE + COLONNA DESTRA
     # --------------------------------------------------------------------------
     if st.session_state.opened_submenu_node is None:
         tot_fig = len(store["figurine"])
@@ -581,6 +625,14 @@ if pin_input in ["9999", "0000"]:
         tot_nodes = len(store["nodes"])
 
         col_center, col_right = st.columns([3.0, 1.15], gap="small")
+
+        cards_payload = []
+        status_hex = {
+            "GREEN": "#10b981",
+            "PURPLE": "#6b21a8",
+            "YELLOW": "#f59e0b",
+            "RED": "#ef4444"
+        }
 
         with col_center:
             num_rows = (tot_nodes + 2) // 3
@@ -592,7 +644,6 @@ if pin_input in ["9999", "0000"]:
                         node = store["nodes"][idx]
                         nid = node["id"]
                         with row_cols[c_idx]:
-                            # SE QUESTO QUADRATO È STATO CLICCATO -> LE 5 RIGHE STANNO NELLO STESSO IDENTICO SPAZIO!
                             if st.session_state.expanded_node_id == nid:
                                 if nid == "N00":
                                     five_rows = [
@@ -617,28 +668,36 @@ if pin_input in ["9999", "0000"]:
                                         st.session_state.opened_submenu_row = r_num
                                         st.rerun()
 
-                                if st.button(f"✖ Chiudi {node['name']}", key=f"close_{nid}", type="secondary", use_container_width=True):
+                                if st.button(f"✖ {node['name']}", key=f"close_{nid}", type="secondary", use_container_width=True):
                                     st.session_state.expanded_node_id = None
                                     st.rerun()
-
-                            # ALTRIMENTI -> VERO QUADRATO (216px) SENZA NUMERI, GIUSTIFICATO A SINISTRA, CON VERDE SMERALDO!
                             else:
                                 n_fr = [v for v in store["haccp_state"].values() if v["node_id"] == nid]
                                 n_st = len([f for f in store["figurine"] if f["node_id"] == nid])
+                                bars = [status_hex[f["status"]] for f in n_fr]
                                 if nid == "N00":
-                                    sub_status = "🟢 REGIA GENERALE\n▸ 5 Sottomenu"
+                                    tag_txt = "MASTER"
                                 elif n_fr:
                                     ok_c = sum(1 for f in n_fr if f["status"] == "GREEN")
-                                    sub_status = f"🟢 HACCP {ok_c}/{len(n_fr)}  ·  STAFF {n_st}\n▸ Apri 5 Voci"
+                                    tag_txt = f"{ok_c}/{len(n_fr)}"
                                 else:
-                                    sub_status = f"🟢 STAFF ATTIVO: {n_st}\n▸ Apri 5 Voci"
+                                    tag_txt = f"0{n_st}" if n_st > 0 else "—"
 
-                                square_label = f"{node['name']}\n\n\n{sub_status}"
-                                if st.button(square_label, key=f"sq_{nid}", type="primary", use_container_width=True):
+                                cards_payload.append({
+                                    "name": node["name"],
+                                    "accent": node.get("accent", "#10b981"),
+                                    "bg_grad": node.get("bg", "linear-gradient(145deg, #071914 0%, #0b1422 100%)"),
+                                    "bars": bars,
+                                    "tag": tag_txt
+                                })
+
+                                if st.button(node["name"], key=f"sq_{nid}", type="primary", use_container_width=True):
                                     st.session_state.expanded_node_id = nid
                                     st.rerun()
 
-        # RETTANGOLO VERTICALE DI RIEPILOGO A DESTRA (ALLINEATO ALLA GRIGLIA)
+            style_architectural_squares(cards_payload)
+
+        # RETTANGOLO VERTICALE DI RIEPILOGO A DESTRA
         with col_right:
             sos_txt = f"{tot_sos} APERTI" if tot_sos > 0 else "0 ATTIVI"
             st.markdown(f"""
@@ -648,14 +707,14 @@ if pin_input in ["9999", "0000"]:
                     <div class="tower-item-emerald">
                         <div class="tower-lbl">CONTROLLI HACCP ({win_name.split()[0]})</div>
                         <div class="tower-val">{checked_fridges}/{total_fridges}</div>
-                        <div class="tower-sub">🟢 Unità certificate</div>
+                        <div class="tower-sub">Unità certificate</div>
                     </div>
                     <div class="tower-item">
                         <div class="tower-lbl">PRESIDIO STAFF</div>
                         <div class="tower-val">{tot_fig} UNITÀ</div>
                         <div class="tower-sub">Operatori in turno</div>
                     </div>
-                    <div class="tower-item">
+                    <div class="tower-item-amber">
                         <div class="tower-lbl">SEGNALAZIONI</div>
                         <div class="tower-val">{sos_txt}</div>
                         <div class="tower-sub">Richieste dai reparti</div>
@@ -663,17 +722,20 @@ if pin_input in ["9999", "0000"]:
                     <div class="tower-item-emerald">
                         <div class="tower-lbl">REGISTRO ASL</div>
                         <div class="tower-val">{tot_logs} FIRME</div>
-                        <div class="tower-sub">🟢 Pronte per stampa</div>
+                        <div class="tower-sub">Pronte per stampa</div>
                     </div>
                 </div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#94a3b8;border-top:1px solid #1e293b;padding-top:10px;">
-                    Tocca una cella quadrata a sinistra per dividerla nelle 5 righe operative.
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.66rem;color:#94a3b8;border-top:1px solid #1e293b;padding-top:10px;line-height:1.7;">
+                    <span style="color:#f59e0b;">■</span> DIREZIONE<br>
+                    <span style="color:#10b981;">■</span> FOOD & BEVERAGE<br>
+                    <span style="color:#38bdf8;">■</span> ACCOGLIENZA & CAMERE<br>
+                    <span style="color:#a855f7;">■</span> ESTERNI & SPIAGGIA
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
     # --------------------------------------------------------------------------
-    # LIVELLO 3: IL SOTTOMENU APERTO (SENZA BARRE VUOTE E CON "TORNA ALLA PIANTA PRINCIPALE")
+    # LIVELLO 3: IL SOTTOMENU APERTO
     # --------------------------------------------------------------------------
     else:
         nid = st.session_state.opened_submenu_node
@@ -686,37 +748,43 @@ if pin_input in ["9999", "0000"]:
                 st.session_state.opened_submenu_node = None
                 st.rerun()
         with c_back2:
-            if st.button("🏛️ TORNA ALLA PIANTA PRINCIPALE", type="secondary", use_container_width=True):
+            if st.button("TORNA ALLA PIANTA PRINCIPALE", type="secondary", use_container_width=True):
                 st.session_state.opened_submenu_node = None
                 st.session_state.expanded_node_id = None
                 st.rerun()
 
         st.divider()
 
-        # ======================================================================
-        # SOTTOMENU DI DIREZIONE
-        # ======================================================================
         if nid == "N00":
             if r_num == 1:
                 st.markdown("### DIREZIONE // 1. ESPANDI ARCHITETTURA")
-                ns_name = st.text_input("Nome Nuovo Quadrato (es. PISCINA / SPA / CANTINA)")
+                c_n1, c_n2 = st.columns([2, 1])
+                ns_name = c_n1.text_input("Nome Nuovo Quadrato (es. PISCINA / SPA / CANTINA)")
+                ns_col = c_n2.selectbox("Colore Area", ["Verde Smeraldo (F&B)", "Blu Ciano (Camere/Ospiti)", "Viola Indaco (Esterni)", "Oro Ambra (Direzione)"])
+                col_map = {
+                    "Verde Smeraldo (F&B)": ("#10b981", "linear-gradient(145deg, #071914 0%, #0b1422 100%)"),
+                    "Blu Ciano (Camere/Ospiti)": ("#38bdf8", "linear-gradient(145deg, #081526 0%, #0d182a 100%)"),
+                    "Viola Indaco (Esterni)": ("#a855f7", "linear-gradient(145deg, #150d24 0%, #0c1424 100%)"),
+                    "Oro Ambra (Direzione)": ("#f59e0b", "linear-gradient(145deg, #161209 0%, #0d1320 100%)")
+                }
                 if st.button("➕ CREA NUOVO QUADRATO NELLA GRIGLIA", type="secondary"):
                     if ns_name:
+                        acc, bg_g = col_map[ns_col]
                         store["nodes"].append({
                             "id": f"N{int(datetime.now().timestamp())}",
                             "name": ns_name.strip().upper(),
+                            "accent": acc, "bg": bg_g,
                             "sub_zones": ["Zona 1"],
                             "fridges": [],
                             "tasks": [{"title": "Controllo Apertura", "done": False}]
                         })
-                        st.toast("Nuovo quadrato aggiunto alla griglia!")
                         st.rerun()
 
                 st.divider()
                 st.markdown("##### Reparti Attivi nella Pianta Principale")
                 for idx_n, nd in enumerate(store["nodes"]):
                     c1, c2 = st.columns([4, 1])
-                    c1.markdown(f"- 🟢 **`{nd['name']}`**")
+                    c1.markdown(f"- **`{nd['name']}`**")
                     if nd["id"] != "N00":
                         if c2.button("Rimuovi", key=f"del_sq_{nd['id']}"):
                             store["nodes"].pop(idx_n)
@@ -727,7 +795,6 @@ if pin_input in ["9999", "0000"]:
                 for idx_n, nd in enumerate(store["nodes"]):
                     nd["name"] = st.text_input(f"Nome Quadrato {idx_n+1}", value=nd["name"], key=f"rn_{nd['id']}")
                 if st.button("💾 SALVA NOMI", type="secondary", use_container_width=True):
-                    st.toast("Nomi aggiornati!")
                     st.rerun()
 
             elif r_num == 3:
@@ -757,7 +824,7 @@ if pin_input in ["9999", "0000"]:
                 st.divider()
                 for idx_f, f in enumerate(store["figurine"]):
                     cf1, cf2 = st.columns([4, 1])
-                    cf1.markdown(f"- 🟢 **PIN `{f['pin']}`** — **{f['nick']}** ({f['role']})")
+                    cf1.markdown(f"- **PIN `{f['pin']}`** — **{f['nick']}** ({f['role']})")
                     if cf2.button("Rimuovi", key=f"rm_f_{f['pin']}_{idx_f}"):
                         store["figurine"].pop(idx_f)
                         st.rerun()
@@ -829,9 +896,6 @@ if pin_input in ["9999", "0000"]:
                             store["haccp_state"][k].update({"status": "PURPLE", "label": "ATTESA", "by": "-", "pin": "-", "time": "--:--"})
                         st.rerun()
 
-        # ======================================================================
-        # SOTTOMENU DEI REPARTI (PASTICCERIA, CAMERE, RECEPTION, RISTORANTE...)
-        # ======================================================================
         else:
             node_fridges = [v for k, v in store["haccp_state"].items() if v["node_id"] == nid]
             node_staff = [f for f in store["figurine"] if f["node_id"] == nid]
@@ -877,7 +941,7 @@ if pin_input in ["9999", "0000"]:
             elif r_num == 2:
                 st.markdown(f"### {node['name']} // 2. PRESIDIO STAFF")
                 for f in node_staff:
-                    st.markdown(f"- 🟢 **{f['nick']}** ({f['role']}) — Turno: `{f['shift']}` | PIN: `{f['pin']}`")
+                    st.markdown(f"- **{f['nick']}** ({f['role']}) — Turno: `{f['shift']}` | PIN: `{f['pin']}`")
                 st.divider()
                 pick_fig = st.selectbox("Sposta qui un Operatore", [f["nick"] for f in store["figurine"]])
                 if st.button("Conferma Assegnazione", type="secondary"):
