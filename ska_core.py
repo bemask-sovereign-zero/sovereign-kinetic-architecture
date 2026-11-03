@@ -162,11 +162,13 @@ div.stButton > button[kind="secondary"] {
     font-size: 0.82rem !important;
     padding: 10px 16px !important;
     min-height: 44px !important;
+    transition: transform 0.08s ease !important;
 }
 div.stButton > button[kind="secondary"] p { color: #ffffff !important; font-weight: 700 !important; }
 div.stButton > button[kind="secondary"]:hover { background: #0ea5e9 !important; border-color: #ffffff !important; }
+div.stButton > button[kind="secondary"]:active { transform: scale(0.97) !important; }
 
-/* GRANDI QUADRATI TOUCH DELLA COSTELLAZIONE (INTERAMENTE TOCCABILI COL DITO) */
+/* GRANDI QUADRATI TOUCH DELLA COSTELLAZIONE */
 div.stButton > button[kind="primary"] {
     background: linear-gradient(160deg, #0d1524 0%, #111c30 100%) !important;
     border: 1.5px solid #1e3a5f !important;
@@ -185,7 +187,7 @@ div.stButton > button[kind="primary"] {
     margin-bottom: 8px !important;
     cursor: pointer !important;
     user-select: none !important;
-    transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+    transition: transform 0.10s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
 }
 div.stButton > button[kind="primary"]:hover {
     background: linear-gradient(160deg, #132038 0%, #172a4a 100%) !important;
@@ -193,7 +195,7 @@ div.stButton > button[kind="primary"]:hover {
     box-shadow: 0 0 18px rgba(56, 189, 248, 0.28) !important;
 }
 div.stButton > button[kind="primary"]:active {
-    transform: scale(0.98) !important;
+    transform: scale(0.97) !important;
     background: #1e3a5f !important;
 }
 
@@ -248,24 +250,105 @@ label, .stRadio label, .stSelectbox label, .stTextInput label, .stNumberInput la
 </style>
 """, unsafe_allow_html=True)
 
-# --- SONAR TATTICO ---
+# --- SONAR TATTICO E SINTETIZZATORE AUDIO AD OGNI TOCCO ---
 def play_tactical_sonar(mode="ping"):
     freq = 880 if mode == "ping" else 220
     wave = "sine" if mode == "ping" else "triangle"
     js_code = f"""
     <script>
     (function() {{
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator(); const gain = ctx.createGain();
-        osc.type = '{wave}'; osc.frequency.setValueAtTime({freq}, ctx.currentTime);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.start(); osc.stop(ctx.currentTime + 0.3);
+        try {{
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator(); const gain = ctx.createGain();
+            osc.type = '{wave}'; osc.frequency.setValueAtTime({freq}, ctx.currentTime);
+            gain.gain.setValueAtTime(0.18, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(); osc.stop(ctx.currentTime + 0.25);
+        }} catch(e) {{}}
     }})();
     </script>
     """
     components.html(js_code, height=0, width=0)
+
+def bind_global_tactile_audio(enabled=True):
+    en_flag = "true" if enabled else "false"
+    js = f"""
+    <script>
+    (function() {{
+        const parentWin = window.parent;
+        const doc = parentWin.document;
+        parentWin.__skaAudioEnabled = {en_flag};
+
+        if (!parentWin.__skaAudioEngineReady) {{
+            parentWin.__skaAudioEngineReady = true;
+
+            parentWin.__playSkaSound = function(kind) {{
+                if (!parentWin.__skaAudioEnabled) return;
+                try {{
+                    if (!parentWin.__skaAudioCtx) {{
+                        parentWin.__skaAudioCtx = new (parentWin.AudioContext || parentWin.webkitAudioContext)();
+                    }}
+                    const ctx = parentWin.__skaAudioCtx;
+                    if (ctx.state === 'suspended') {{
+                        ctx.resume();
+                    }}
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    if (kind === 'node') {{
+                        // Tocco sui grandi quadrati: switch tattico da console (340Hz -> 680Hz)
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(340, now);
+                        osc.frequency.exponentialRampToValueAtTime(680, now + 0.045);
+                        gain.gain.setValueAtTime(0.18, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+                        osc.start(now);
+                        osc.stop(now + 0.055);
+                    }} else if (kind === 'action') {{
+                        // Tocco sui bottoni azzurri di conferma/firma: doppio impulso cristallino (587Hz -> 880Hz)
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(587.33, now);
+                        osc.frequency.setValueAtTime(880.0, now + 0.04);
+                        gain.gain.setValueAtTime(0.16, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+                        osc.start(now);
+                        osc.stop(now + 0.11);
+                    }} else {{
+                        // Tocco su schede, checkbox, menu: micro-click ad alta precisione (1200Hz)
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(1200, now);
+                        osc.frequency.exponentialRampToValueAtTime(450, now + 0.02);
+                        gain.gain.setValueAtTime(0.10, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+                        osc.start(now);
+                        osc.stop(now + 0.025);
+                    }}
+                }} catch(e) {{}}
+            }};
+
+            // Intercetta in tempo reale qualsiasi pressione su bottoni, quadrati, tab e controlli
+            doc.addEventListener('pointerdown', function(ev) {{
+                const btnPrimary = ev.target.closest('button[kind="primary"]');
+                const btnSecondary = ev.target.closest('button[kind="secondary"]');
+                const anyInteractive = ev.target.closest('button, [role="tab"], [data-baseweb="select"], input[type="checkbox"], [data-testid="stExpander"] summary');
+
+                if (btnPrimary) {{
+                    parentWin.__playSkaSound('node');
+                }} else if (btnSecondary) {{
+                    parentWin.__playSkaSound('action');
+                }} else if (anyInteractive) {{
+                    parentWin.__playSkaSound('tick');
+                }}
+            }}, true);
+        }}
+    }})();
+    </script>
+    """
+    components.html(js, height=0, width=0)
 
 def evaluate_fridge_status(fridge_type, temp_val, is_broken=False):
     if is_broken:
@@ -422,7 +505,6 @@ def get_shared_store():
                 "kind": fr["kind"]
             }
 
-    # Esempi pre-firmati per mostrare subito il contrasto Verde / Viola / Giallo nel retino
     haccp_state["N01 || Cella Basi +4°C"].update({"status": "GREEN", "label": "+3.6°C", "by": "Marco S.", "pin": "1001", "time": "06:45"})
     haccp_state["N01 || Cella Semifreddi -18°C"].update({"status": "GREEN", "label": "-19.5°C", "by": "Marco S.", "pin": "1001", "time": "06:46"})
     haccp_state["N04 || Buffet Freddo Colazioni"].update({"status": "GREEN", "label": "+3.9°C", "by": "Jolly 01", "pin": "1004", "time": "06:50"})
@@ -430,7 +512,6 @@ def get_shared_store():
     haccp_state["N04 || Cella Carne +2°C"].update({"status": "GREEN", "label": "+2.4°C", "by": "Jolly 01", "pin": "1004", "time": "06:52"})
     haccp_state["N04 || Cella Pesce 0°C"].update({"status": "YELLOW", "label": "+6.2°C", "by": "Jolly 01", "pin": "1004", "time": "06:55"})
 
-    # Registro storico ufficiale delle firme HACCP per la stampa ASL
     today_d = datetime.now(timezone(timedelta(hours=1))).strftime("%d/%m/%Y")
     haccp_logs = [
         {"date": today_d, "time": "06:45", "window": "MATTINA", "node": "01 // CASA MADRE", "fridge": "Cella Basi +4°C", "temp": "+3.6°C", "outcome": "CONFORME", "operator": "Marco S.", "pin_sig": "PIN #1001 (Verificato)"},
@@ -503,11 +584,16 @@ with c_dir:
     if st.button("PLANCIA 9999 🏛️", type="secondary", use_container_width=True):
         st.session_state.active_pin = "9999"
         st.session_state.selected_node_id = None
+        play_tactical_sonar("ping")
         st.rerun()
 with c_sim:
-    store["force_remind_demo"] = st.toggle("⏰ SIMULA SCADENZA ORARIO FRIGHI", value=store["force_remind_demo"])
+    store["force_remind_demo"] = st.toggle("⏰ SIMULA SCADENZA FRIGHI", value=store["force_remind_demo"])
 with c_sonar:
-    sonar_active = st.toggle("🔊 SONAR AUDIO", value=False)
+    # ATTIVO DI DEFAULT: SUONA AD OGNI PRESSIONE SUI TASTI E SUI BLOCCHI!
+    sonar_active = st.toggle("🔊 AUDIO TASTI & SONAR", value=True)
+
+# Attiva il sintetizzatore globale su tutti i tasti della pagina
+bind_global_tactile_audio(sonar_active)
 
 pin_input = st.session_state.active_pin
 
@@ -609,7 +695,6 @@ if pin_input in ["9999", "0000"]:
                     st.session_state.selected_node_id = nid
                     st.rerun()
 
-        # Blocco 08: Impostazioni, Eventi & Stampa Registro ASL
         marker_08 = "08 // REGIA, IMPOSTAZIONI & STAMPA"
         cards_payload.append({
             "marker": marker_08,
@@ -625,7 +710,6 @@ if pin_input in ["9999", "0000"]:
                 st.session_state.selected_node_id = "HUB_VAULT"
                 st.rerun()
 
-        # Inietta il retino di quadratini e pallini blu dentro tutti gli 8 pulsanti touch
         inject_matrix_into_touch_cards(cards_payload)
 
     # --------------------------------------------------------------------------
@@ -649,7 +733,6 @@ if pin_input in ["9999", "0000"]:
             st.markdown("##### 📋 REGISTRO CRONOLOGICO FIRME E ORARI HACCP (VALIDAZIONE TRAMITE PIN PERSONALE)")
             st.caption("Ogni lettura registrata dagli operatori viene timbrata con l'ora esatta di sistema e la firma elettronica associata al PIN individuale.")
 
-            # Costruzione Tabella HTML a schermo
             rows_html = ""
             for log in reversed(store["haccp_logs"]):
                 rows_html += (
@@ -678,7 +761,6 @@ if pin_input in ["9999", "0000"]:
             """, unsafe_allow_html=True)
 
             st.divider()
-            # Generazione Documento HTML Stampabile in Bianco e Nero per Ispezione ASL
             printable_html = f"""
             <html><head><meta charset="utf-8"><title>Registro HACCP - Boschetto Pro</title>
             <style>
@@ -702,7 +784,6 @@ if pin_input in ["9999", "0000"]:
             </body></html>
             """
 
-            # Generazione CSV per Excel
             csv_buffer = io.StringIO()
             writer = csv.DictWriter(csv_buffer, fieldnames=["date", "time", "window", "node", "fridge", "temp", "outcome", "operator", "pin_sig"])
             writer.writeheader()
@@ -945,6 +1026,7 @@ else:
                     })
                     if status_color in ["RED", "YELLOW"]:
                         store["alarm_counter"] += 1
+                    play_tactical_sonar("ping")
                     st.toast(f"Firmato da {user['nick']} alle {now_str}: {label_text}")
                     st.rerun()
 
@@ -960,5 +1042,6 @@ else:
                     "item": sos_item,
                     "status": "Richiesto"
                 })
+                play_tactical_sonar("ping")
                 st.toast("SOS inviato!")
                 st.rerun()
