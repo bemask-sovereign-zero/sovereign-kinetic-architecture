@@ -29,7 +29,7 @@ def get_current_window_info(now_dt):
         overdue = (h >= 21) or (h < 6)
         return "SERA (19:00-03:00)", "21:00", overdue
 
-# --- CSS ARCHITETTONICO + TOUCH PANEL CON RETINO LED E PALLINI BLU ---
+# --- CSS ARCHITETTONICO + QUADRATI SIMMETRICI AL MILLIMETRO ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -52,7 +52,7 @@ button[data-testid="collapsedControl"],
 }
 
 .block-container {
-    padding-top: 1.6rem !important;
+    padding-top: 1.5rem !important;
     padding-bottom: 2rem !important;
     max-width: 1420px !important;
 }
@@ -168,14 +168,15 @@ div.stButton > button[kind="secondary"] p { color: #ffffff !important; font-weig
 div.stButton > button[kind="secondary"]:hover { background: #0ea5e9 !important; border-color: #ffffff !important; }
 div.stButton > button[kind="secondary"]:active { transform: scale(0.97) !important; }
 
-/* GRANDI QUADRATI TOUCH DELLA COSTELLAZIONE */
+/* GRANDI QUADRATI TOUCH: ALTEZZA IDENTICA BLOCCATA A 164px PER TUTTI GLI 8 BLOCCHI */
 div.stButton > button[kind="primary"] {
     background: linear-gradient(160deg, #0d1524 0%, #111c30 100%) !important;
     border: 1.5px solid #1e3a5f !important;
     border-top: 2.5px solid #38bdf8 !important;
     border-radius: 8px !important;
-    height: auto !important;
-    min-height: 158px !important;
+    height: 164px !important;
+    min-height: 164px !important;
+    max-height: 164px !important;
     width: 100% !important;
     padding: 14px 16px !important;
     text-align: left !important;
@@ -187,6 +188,7 @@ div.stButton > button[kind="primary"] {
     margin-bottom: 8px !important;
     cursor: pointer !important;
     user-select: none !important;
+    overflow: hidden !important;
     transition: transform 0.10s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
 }
 div.stButton > button[kind="primary"]:hover {
@@ -260,7 +262,6 @@ def bind_global_tactile_audio(enabled=True):
         const doc = parentWin.document;
         parentWin.__skaAudioEnabled = {en_flag};
 
-        // Funzione che inizializza e sblocca l'AudioContext sui telefoni (Android/iOS)
         parentWin.__ensureMobileAudioUnlocked = function() {{
             if (!parentWin.__skaAudioCtx) {{
                 const AudioCtx = parentWin.AudioContext || parentWin.webkitAudioContext;
@@ -281,7 +282,6 @@ def bind_global_tactile_audio(enabled=True):
                 const ctx = parentWin.__ensureMobileAudioUnlocked();
                 if (!ctx) return;
 
-                // Vibrazione tattica leggera su smartphone Android compatibili
                 if (parentWin.navigator && parentWin.navigator.vibrate) {{
                     parentWin.navigator.vibrate(kind === 'node' ? 20 : 12);
                 }}
@@ -293,7 +293,6 @@ def bind_global_tactile_audio(enabled=True):
                 gain.connect(ctx.destination);
 
                 if (kind === 'node') {{
-                    // Tocco sui grandi quadrati: impulso pieno e udibile su altoparlante smartphone (440Hz -> 880Hz)
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(440, now);
                     osc.frequency.exponentialRampToValueAtTime(880, now + 0.065);
@@ -302,7 +301,6 @@ def bind_global_tactile_audio(enabled=True):
                     osc.start(now);
                     osc.stop(now + 0.085);
                 }} else if (kind === 'action') {{
-                    // Tocco sui bottoni azzurri di conferma/firma: doppio accordo cristallino (587Hz -> 880Hz)
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(587.33, now);
                     osc.frequency.setValueAtTime(880.0, now + 0.05);
@@ -311,7 +309,6 @@ def bind_global_tactile_audio(enabled=True):
                     osc.start(now);
                     osc.stop(now + 0.14);
                 }} else {{
-                    // Tocco su schede, checkbox, menu: click nitido (1100Hz)
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(1100, now);
                     osc.frequency.exponentialRampToValueAtTime(520, now + 0.035);
@@ -326,14 +323,12 @@ def bind_global_tactile_audio(enabled=True):
         if (!parentWin.__skaAudioEngineReady) {{
             parentWin.__skaAudioEngineReady = true;
 
-            // Sblocca l'audio al primo tocco ovunque sullo schermo del telefono
             ['touchstart', 'touchend', 'click'].forEach(function(evtName) {{
                 doc.addEventListener(evtName, function() {{
                     parentWin.__ensureMobileAudioUnlocked();
                 }}, {{ passive: true, capture: true }});
             }});
 
-            // Usa 'click' (che su mobile scatta al rilascio del dito ed è autorizzato a riprodurre audio da iOS/Android)
             doc.addEventListener('click', function(ev) {{
                 const btnPrimary = ev.target.closest('button[kind="primary"]');
                 const btnSecondary = ev.target.closest('button[kind="secondary"]');
@@ -351,7 +346,6 @@ def bind_global_tactile_audio(enabled=True):
             }}, true);
         }}
 
-        // Se il telefono ha ricaricato il blocco durante il tap, garantisce la riproduzione del suono all'apertura
         const pending = parentWin.sessionStorage.getItem('__skaPendingSound');
         if (pending) {{
             parentWin.sessionStorage.removeItem('__skaPendingSound');
@@ -376,7 +370,7 @@ def evaluate_fridge_status(fridge_type, temp_val, is_broken=False):
         elif 5.5 < temp_val <= 8.0 or temp_val < -1.0: return "YELLOW", f"{temp_val:+.1f}°C"
         else: return "RED", f"{temp_val:+.1f}°C"
 
-# --- MOTORE GRAFICO CHE INIETTA IL RETINO DI QUADRATINI E I PALLINI BLU NEI PULSANTI TOUCH ---
+# --- MOTORE GRAFICO CON GEOMETRIA IDENTICA PER TUTTI GLI 8 QUADRATI ---
 def inject_matrix_into_touch_cards(cards_payload):
     payload_json = json.dumps(cards_payload)
     js = f"""
@@ -389,8 +383,7 @@ def inject_matrix_into_touch_cards(cards_payload):
             buttons.forEach(btn => {{
                 const rawText = btn.innerText || "";
                 cards.forEach(c => {{
-                    if (rawText.includes(c.marker) && !btn.dataset.matrixPainted) {{
-                        btn.dataset.matrixPainted = "true";
+                    if (rawText.includes(c.marker)) {{
                         let sqHtml = '';
                         if (c.squares.length === 0) {{
                             for (let i=0; i<4; i++) {{
@@ -411,12 +404,12 @@ def inject_matrix_into_touch_cards(cards_payload):
                             }}
                         }}
                         btn.innerHTML = `
-                        <div style="width:100%;display:flex;flex-direction:column;justify-content:space-between;min-height:126px;text-align:left;pointer-events:none;">
+                        <div style="width:100%;height:134px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;pointer-events:none;">
                             <div>
-                                <div style="font-family:'Inter',sans-serif;font-size:0.96rem;font-weight:700;color:#ffffff;letter-spacing:0.03em;">${{c.title}}</div>
-                                <div style="font-family:'Inter',sans-serif;font-size:0.75rem;color:#94a3b8;margin-top:2px;">${{c.subtitle}}</div>
+                                <div style="font-family:'Inter',sans-serif;font-size:0.94rem;font-weight:700;color:#ffffff;letter-spacing:0.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${{c.title}}</div>
+                                <div style="font-family:'Inter',sans-serif;font-size:0.74rem;color:#94a3b8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${{c.subtitle}}</div>
                             </div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0;padding:9px 11px;background:#070c15;border:1px solid #1e293b;border-radius:6px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 11px;background:#070c15;border:1px solid #1e293b;border-radius:6px;min-height:42px;">
                                 <div style="display:flex;flex-wrap:wrap;gap:5px;max-width:65%;">${{sqHtml}}</div>
                                 <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;max-width:35%;">${{dotsHtml}}</div>
                             </div>
@@ -431,14 +424,14 @@ def inject_matrix_into_touch_cards(cards_payload):
             }});
         }}
         paintTouchMatrix();
-        setTimeout(paintTouchMatrix, 120);
-        setTimeout(paintTouchMatrix, 400);
+        setTimeout(paintTouchMatrix, 100);
+        setTimeout(paintTouchMatrix, 350);
     }})();
     </script>
     """
     components.html(js, height=0, width=0)
 
-# --- DNA STRUTTURALE E REGISTRO FIRME ---
+# --- DNA STRUTTURALE DINAMICO (SENZA SOS PRECARICATI) ---
 @st.cache_resource
 def get_shared_store():
     nodes = [
@@ -538,6 +531,11 @@ def get_shared_store():
 
     return {
         "nodes": nodes,
+        "hub_meta": {
+            "code": "08",
+            "name": "REGIA & STAMPA",
+            "subtitle": "Titoli, Frighi, Staff & Registro ASL"
+        },
         "haccp_state": haccp_state,
         "haccp_logs": haccp_logs,
         "force_remind_demo": False,
@@ -550,9 +548,8 @@ def get_shared_store():
             {"pin": "1005", "nick": "Extra A", "role": "Barman", "index_cost": 90, "node_id": "N05", "sub_zone": "Banco Caffetteria", "shift": "Mattina (07-15)"},
             {"pin": "1006", "nick": "DJ / Evento", "role": "Regia Gazebo", "index_cost": 150, "node_id": "N06", "sub_zone": "Gazebo Cerimonie", "shift": "Cena/Sera (18-02)"}
         ],
-        "sos_queue": [
-            {"time": "06:52", "node_id": "N04", "from": "04. Ristorante (Sala Colazioni)", "item": "2 Vassoi Cornetti + Latte Senza Lattosio", "status": "In corso"}
-        ],
+        # CODA SOS COMPLETAMENTE VUOTA ALL'AVVIO (NESSUN FALSO MESSAGGIO CORNETTI/LATTE)
+        "sos_queue": [],
         "events": [
             {"id": "EV1", "title": "Matrimonio Rossi-Bianchi", "zone": "Gazebo -> Veranda Circolare", "pax": 130, "cake_time": "22:30", "phase": "1. Accoglienza / Rito"},
             {"id": "EV2", "title": "50° Anniversario", "zone": "Veranda Grande", "pax": 55, "cake_time": "23:00", "phase": "2. Aperitivo"}
@@ -561,6 +558,11 @@ def get_shared_store():
     }
 
 store = get_shared_store()
+
+# Sicurezza nel caso la cache precedente avesse ancora il vecchio SOS cornetti o mancasse hub_meta
+if "hub_meta" not in store:
+    store["hub_meta"] = {"code": "08", "name": "REGIA & STAMPA", "subtitle": "Titoli, Frighi, Staff & Registro ASL"}
+store["sos_queue"] = [s for s in store["sos_queue"] if "Cornetti" not in s.get("item", "")]
 
 if "selected_node_id" not in st.session_state:
     st.session_state.selected_node_id = None
@@ -608,7 +610,7 @@ bind_global_tactile_audio(sonar_active)
 pin_input = st.session_state.active_pin
 
 # ==============================================================================
-# VISTA 1: DIREZIONE (PIN 9999) — PLANCIA TOUCH CON RETINO QUADRATINI E PALLINI BLU
+# VISTA 1: DIREZIONE (PIN 9999) — PLANCIA TOUCH SIMMETRICA E DINAMICA
 # ==============================================================================
 if pin_input in ["9999", "0000"]:
     red_tiles = [v["fridge_name"] for v in store["haccp_state"].values() if v["status"] == "RED"]
@@ -623,24 +625,30 @@ if pin_input in ["9999", "0000"]:
             unsafe_allow_html=True
         )
 
+    # IL BANNER SOS APPARE SOLO SE QUALCUNO HA DAVVERO MANDATO UN'EMERGENZA!
     if store["sos_queue"]:
         latest_sos = store["sos_queue"][-1]
-        st.markdown(f"<div class='alert-bar-sos'>📦 SOS MAGAZZINO ({len(store['sos_queue'])}) — {latest_sos['from']} [ore {latest_sos['time']}]: {latest_sos['item']}</div>", unsafe_allow_html=True)
+        c_s1, c_s2 = st.columns([4.5, 1])
+        with c_s1:
+            st.markdown(f"<div class='alert-bar-sos'>📦 SOS MAGAZZINO ({len(store['sos_queue'])}) — {latest_sos['from']} [ore {latest_sos['time']}]: {latest_sos['item']}</div>", unsafe_allow_html=True)
+        with c_s2:
+            if st.button("✖ Chiudi SOS", type="secondary", use_container_width=True):
+                store["sos_queue"].clear()
+                st.rerun()
 
     # --------------------------------------------------------------------------
-    # LIVELLO 0: LA COSTELLAZIONE TOUCH CON RETINO GRAFICO INTERNO
+    # LIVELLO 0: LA COSTELLAZIONE TOUCH A 8 QUADRATI UGUALI
     # --------------------------------------------------------------------------
     if st.session_state.selected_node_id is None:
         tot_fig = len(store["figurine"])
         tot_sos = len(store["sos_queue"])
-        tot_ev = len(store["events"])
 
         st.markdown(f"""
         <div class="kpi-bar">
             <div class="kpi-box"><div class="kpi-lbl">Controlli HACCP ({win_name.split()[0]})</div><div class="kpi-num">{checked_fridges}/{total_fridges} FIRMATI</div></div>
             <div class="kpi-box"><div class="kpi-lbl">Presidio Staff (Pallini Blu)</div><div class="kpi-num">{tot_fig} UNITA ATTIVE</div></div>
             <div class="kpi-box"><div class="kpi-lbl">Richieste Magazzino</div><div class="kpi-num">{tot_sos} SOS APERTI</div></div>
-            <div class="kpi-box"><div class="kpi-lbl">Regia Eventi & Stampa</div><div class="kpi-num">{len(store['haccp_logs'])} FIRME REGISTRATE</div></div>
+            <div class="kpi-box"><div class="kpi-lbl">Regia & Stampa ASL</div><div class="kpi-num">{len(store['haccp_logs'])} FIRME REGISTRATE</div></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -705,44 +713,71 @@ if pin_input in ["9999", "0000"]:
                     st.session_state.selected_node_id = nid
                     st.rerun()
 
-        marker_08 = "08 // REGIA, IMPOSTAZIONI & STAMPA"
+        # Blocco 08: Identico agli altri nelle dimensioni e con titolo dinamico personalizzabile!
+        hm = store["hub_meta"]
+        marker_08 = f"{hm['code']} // {hm['name']}"
         cards_payload.append({
             "marker": marker_08,
             "title": marker_08,
-            "subtitle": "Frigoriferi, Staff, Eventi & Stampa Registro ASL",
+            "subtitle": hm["subtitle"],
             "squares": [{"bg": "#0284c7", "border": "#38bdf8"} for _ in range(4)],
             "staff_count": tot_fig,
             "haccp_txt": f"{len(store['haccp_logs'])} FIRME",
             "status_color": "#38bdf8"
         })
         with grid_cols[7]:
-            if st.button(f"{marker_08}\nConfigurazione & Stampe", key="tile_HUB", type="primary", use_container_width=True):
+            if st.button(f"{marker_08}\n{hm['subtitle']}", key="tile_HUB", type="primary", use_container_width=True):
                 st.session_state.selected_node_id = "HUB_VAULT"
                 st.rerun()
 
         inject_matrix_into_touch_cards(cards_payload)
 
     # --------------------------------------------------------------------------
-    # VISTA 08: IMPOSTAZIONI STRUTTURA + STAMPA REGISTRO UFFICIALE ASL
+    # VISTA 08: TITOLI DINAMICI, STAMPA REGISTRO ASL, FRIGHI, STAFF & EVENTI
     # --------------------------------------------------------------------------
     elif st.session_state.selected_node_id == "HUB_VAULT":
         if st.button("⬅ TORNA ALLA COSTELLAZIONE PRINCIPALE", type="secondary", use_container_width=True):
             st.session_state.selected_node_id = None
             st.rerun()
 
-        st.markdown("### 08 // IMPOSTAZIONI STRUTTURA, EVENTI & STAMPA REGISTRO UFFICIALE ASL")
+        hm = store["hub_meta"]
+        st.markdown(f"### {hm['code']} // {hm['name']} — {hm['subtitle']}")
 
-        tab_print, tab_fr, tab_staff, tab_ev = st.tabs([
-            "🖨️ 1. STAMPA REGISTRO ASL (ORARI E FIRME)",
-            "❄️ 2. CONFIGURA FRIGORIFERI",
-            "👥 3. GESTIONE DIPENDENTI & PIN",
-            "🥂 4. AGENDA EVENTI"
+        tab_titles, tab_print, tab_fr, tab_staff, tab_ev = st.tabs([
+            "✏️ 1. PERSONALIZZA TITOLI BLOCCHI",
+            "🖨️ 2. STAMPA REGISTRO ASL",
+            "❄️ 3. CONFIGURA FRIGORIFERI",
+            "👥 4. GESTIONE DIPENDENTI & PIN",
+            "🥂 5. AGENDA EVENTI"
         ])
 
-        with tab_print:
-            st.markdown("##### 📋 REGISTRO CRONOLOGICO FIRME E ORARI HACCP (VALIDAZIONE TRAMITE PIN PERSONALE)")
-            st.caption("Ogni lettura registrata dagli operatori viene timbrata con l'ora esatta di sistema e la firma elettronica associata al PIN individuale.")
+        with tab_titles:
+            st.markdown("##### ✏️ MODIFICA IN TEMPO REALE I TITOLI E I SOTTOTITOLI DEGLI 8 QUADRATI")
+            st.caption("Scrivi qui i tuoi titoli personalizzati per ciascun blocco della plancia e premi Salva.")
 
+            for idx_n, nd in enumerate(store["nodes"]):
+                ct1, ct2, ct3 = st.columns([0.6, 1.8, 2.6])
+                nd["code"] = ct1.text_input("Cod.", value=nd["code"], key=f"ed_c_{nd['id']}")
+                nd["name"] = ct2.text_input(f"Titolo Blocco {idx_n+1}", value=nd["name"], key=f"ed_n_{nd['id']}")
+                nd["subtitle"] = ct3.text_input(f"Sottotitolo {idx_n+1}", value=nd["subtitle"], key=f"ed_s_{nd['id']}")
+                if nd.get("sub_zones") is not None:
+                    sz_str = st.text_input(f"Sottozone di {nd['name']} (separate da virgola)", value=", ".join(nd["sub_zones"]), key=f"ed_sz_{nd['id']}")
+                    nd["sub_zones"] = [s.strip() for s in sz_str.split(",") if s.strip()]
+                st.divider()
+
+            st.markdown("##### ✏️ TITOLO DELL'OTTAVO BLOCCO (REGIA / IMPOSTAZIONI)")
+            ch1, ch2, ch3 = st.columns([0.6, 1.8, 2.6])
+            hm["code"] = ch1.text_input("Cod. 08", value=hm["code"], key="ed_hc")
+            hm["name"] = ch2.text_input("Titolo Blocco 08", value=hm["name"], key="ed_hn")
+            hm["subtitle"] = ch3.text_input("Sottotitolo Blocco 08", value=hm["subtitle"], key="ed_hs")
+
+            if st.button("💾 SALVA TUTTI I NUOVI TITOLI E TORNA ALLA PLANCIA", type="secondary", use_container_width=True):
+                st.session_state.selected_node_id = None
+                st.toast("Titoli dei blocchi aggiornati!")
+                st.rerun()
+
+        with tab_print:
+            st.markdown("##### 📋 REGISTRO CRONOLOGICO FIRME E ORARI HACCP")
             rows_html = ""
             for log in reversed(store["haccp_logs"]):
                 rows_html += (
@@ -862,7 +897,7 @@ if pin_input in ["9999", "0000"]:
             cs4, cs5, cs6 = st.columns(3)
             ns_node_label = cs4.selectbox("Reparto", list(node_map.keys()), key="staff_node_sel")
             chosen_node = node_map[ns_node_label]
-            ns_sub = cs5.selectbox("Sottozona", chosen_node["sub_zones"])
+            ns_sub = cs5.selectbox("Sottozona", chosen_node["sub_zones"] if chosen_node["sub_zones"] else ["Generale"])
             ns_shift = cs6.selectbox("Turno", ["Mattina (07-15)", "Pranzo/Pom (12-20)", "Cena/Sera (18-02)"])
 
             if st.button("ATTIVA DIPENDENTE E ABILITA FIRMA PIN", type="secondary"):
@@ -907,7 +942,7 @@ if pin_input in ["9999", "0000"]:
                     st.rerun()
 
     # --------------------------------------------------------------------------
-    # LIVELLO 1: INTERNO DEL SINGOLO REPARTO (N01..N07)
+    # LIVELLO 1: INTERNO DEL SINGOLO REPARTO (N01..N07) CON MODIFICA RAPIDA TITOLO
     # --------------------------------------------------------------------------
     else:
         nid = st.session_state.selected_node_id
@@ -918,6 +953,18 @@ if pin_input in ["9999", "0000"]:
             st.rerun()
 
         st.markdown(f"### {node['code']} // {node['name']} — {node['subtitle']}")
+
+        with st.expander("✏️ Rinomina questo Blocco o le sue Sottozone al volo"):
+            rn1, rn2 = st.columns(2)
+            new_n_name = rn1.text_input("Titolo Blocco", value=node["name"])
+            new_n_sub = rn2.text_input("Sottotitolo", value=node["subtitle"])
+            new_n_zones = st.text_input("Sottozone (separate da virgola)", value=", ".join(node["sub_zones"]))
+            if st.button("Salva Titolo Blocco", type="secondary"):
+                node["name"] = new_n_name.strip()
+                node["subtitle"] = new_n_sub.strip()
+                node["sub_zones"] = [s.strip() for s in new_n_zones.split(",") if s.strip()]
+                st.rerun()
+
         st.divider()
 
         col_haccp, col_ops = st.columns([1.6, 1.4])
@@ -955,7 +1002,7 @@ if pin_input in ["9999", "0000"]:
 
             with st.expander("Sposta Operatore in questo Reparto"):
                 pick_fig = st.selectbox("Operatore", [f["nick"] for f in store["figurine"]])
-                pick_sub = st.selectbox("Sottozona", node["sub_zones"])
+                pick_sub = st.selectbox("Sottozona", node["sub_zones"] if node["sub_zones"] else ["Generale"])
                 pick_sh = st.selectbox("Turno", ["Mattina (07-15)", "Pranzo/Pom (12-20)", "Cena/Sera (18-02)"])
                 if st.button("Conferma Spostamento", type="secondary"):
                     for f in store["figurine"]:
