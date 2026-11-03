@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 import json
 import csv
 import io
@@ -24,7 +23,7 @@ def get_current_window_info(now_dt):
     else:
         return "SERA (19:00-03:00)"
 
-# --- CSS GRIGLIA QUADRATA PURA + ZERO EMOJI SPORCHE ---
+# --- CSS PURO NATIVO (ZERO BLOCCHI JAVASCRIPT, CARICAMENTO ISTANTANEO) ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
@@ -79,31 +78,68 @@ div[data-testid="stVerticalBlock"] > div {
     border-radius: 3px;
 }
 
-/* LIVELLO 1: QUADRATI PURI E PULITI (216px FISSI) */
+/* LIVELLO 1: QUADRATI GEOMETRICI STILE EXCEL (216px FISSI, NOME PURO IN ALTO A SINISTRA) */
 div.stButton > button[kind="primary"] {
-    background: linear-gradient(150deg, #0b1320 0%, #0e192b 100%) !important;
+    background: linear-gradient(145deg, #071914 0%, #0b1422 100%) !important;
     border: 1px solid #1e293b !important;
+    border-left: 5px solid #10b981 !important;
+    border-top: 2px solid #10b98188 !important;
     border-radius: 4px !important;
     height: 216px !important;
     min-height: 216px !important;
     max-height: 216px !important;
     width: 100% !important;
-    padding: 18px 20px !important;
+    padding: 22px 22px !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
-    align-items: stretch !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
     text-align: left !important;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5) !important;
     margin: 0 !important;
-    transition: transform 0.08s ease, border-color 0.15s ease, background 0.15s ease !important;
+    transition: transform 0.08s ease, border-color 0.15s ease, filter 0.15s ease !important;
 }
 div.stButton > button[kind="primary"]:hover {
-    background: linear-gradient(150deg, #111e32 0%, #15253d 100%) !important;
-    border-color: #38bdf8 !important;
+    filter: brightness(1.25) !important;
+    border-color: #34d399 !important;
 }
 div.stButton > button[kind="primary"]:active {
     transform: scale(0.98) !important;
+}
+div.stButton > button[kind="primary"] p {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 1.24rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    text-align: left !important;
+    margin: 0 !important;
+    padding-bottom: 10px !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.12) !important;
+    width: 100% !important;
+}
+
+/* CODIFICA CROMATICA NATIVA CSS PER AREE (ZERO JAVASCRIPT) */
+div[class*="st-key-sq_AMBER_"] button[kind="primary"] {
+    background: linear-gradient(145deg, #1c1406 0%, #0d1320 100%) !important;
+    border-left: 5px solid #f59e0b !important;
+    border-top: 2px solid #f59e0b88 !important;
+}
+div[class*="st-key-sq_EMERALD_"] button[kind="primary"] {
+    background: linear-gradient(145deg, #061c15 0%, #0b1422 100%) !important;
+    border-left: 5px solid #10b981 !important;
+    border-top: 2px solid #10b98188 !important;
+}
+div[class*="st-key-sq_CYAN_"] button[kind="primary"] {
+    background: linear-gradient(145deg, #07192b 0%, #0d1627 100%) !important;
+    border-left: 5px solid #38bdf8 !important;
+    border-top: 2px solid #38bdf888 !important;
+}
+div[class*="st-key-sq_PURPLE_"] button[kind="primary"] {
+    background: linear-gradient(145deg, #170d29 0%, #0c1424 100%) !important;
+    border-left: 5px solid #a855f7 !important;
+    border-top: 2px solid #a855f788 !important;
 }
 
 /* LIVELLO 2: LE 5 RIGHE CHE OCCUPANO ESATTAMENTE LO STESSO QUADRATO (216px TOTALI) */
@@ -111,7 +147,7 @@ div.stButton > button[kind="secondary"] {
     background: #0b1523 !important;
     color: #e2e8f0 !important;
     border: 1px solid #1e3a5f !important;
-    border-left: 3.5px solid #10b981 !important;
+    border-left: 4px solid #10b981 !important;
     border-radius: 3px !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-weight: 600 !important;
@@ -160,7 +196,7 @@ div.stButton > button[kind="secondary"]:hover {
 .tower-item {
     background: #060a11;
     border: 1px solid #1e293b;
-    border-left: 3px solid #38bdf8;
+    border-left: 3.5px solid #38bdf8;
     border-radius: 3px;
     padding: 12px 14px;
     margin-bottom: 10px;
@@ -168,7 +204,7 @@ div.stButton > button[kind="secondary"]:hover {
 .tower-item-emerald {
     background: #06110e;
     border: 1px solid #064e3b;
-    border-left: 3px solid #10b981;
+    border-left: 3.5px solid #10b981;
     border-radius: 3px;
     padding: 12px 14px;
     margin-bottom: 10px;
@@ -176,7 +212,7 @@ div.stButton > button[kind="secondary"]:hover {
 .tower-item-amber {
     background: #141007;
     border: 1px solid #78350f;
-    border-left: 3px solid #f59e0b;
+    border-left: 3.5px solid #f59e0b;
     border-radius: 3px;
     padding: 12px 14px;
     margin-bottom: 10px;
@@ -239,151 +275,59 @@ div.stButton > button[kind="secondary"]:hover {
 
 @media (max-width: 768px) {
     .block-container { padding-top: 0.8rem !important; padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
-    div.stButton > button[kind="primary"] { height: 170px !important; min-height: 170px !important; max-height: 170px !important; }
+    div.stButton > button[kind="primary"] { height: 165px !important; min-height: 165px !important; max-height: 165px !important; }
     .haccp-tile { width: 48% !important; }
 }
 </style>
 """, unsafe_allow_html=True)
 
-# --- MOTORE AUDIO TATTICO ---
+# --- MOTORE AUDIO TATTICO TRAMITE NUOVO COMANDO NATIVO st.html (ZERO DEPRECAZIONI) ---
 def bind_global_tactile_audio(enabled=True):
-    en_flag = "true" if enabled else "false"
-    js = f"""
+    if not enabled:
+        return
+    js_html = """
     <script>
-    (function() {{
-        const parentWin = window.parent;
-        const doc = parentWin.document;
-        parentWin.__skaAudioEnabled = {en_flag};
+    (function() {
+        const w = window.parent || window;
+        const d = w.document;
+        if (w.__skaSoundBound) return;
+        w.__skaSoundBound = true;
 
-        parentWin.__ensureMobileAudioUnlocked = function() {{
-            if (!parentWin.__skaAudioCtx) {{
-                const AudioCtx = parentWin.AudioContext || parentWin.webkitAudioContext;
-                if (AudioCtx) parentWin.__skaAudioCtx = new AudioCtx();
-            }}
-            const ctx = parentWin.__skaAudioCtx;
-            if (ctx && ctx.state === 'suspended') ctx.resume();
-            return ctx;
-        }};
-
-        parentWin.__playSkaSound = function(kind) {{
-            if (!parentWin.__skaAudioEnabled) return;
-            try {{
-                const ctx = parentWin.__ensureMobileAudioUnlocked();
-                if (!ctx) return;
-                if (parentWin.navigator && parentWin.navigator.vibrate) {{
-                    parentWin.navigator.vibrate(kind === 'node' ? 18 : 10);
-                }}
+        function playTone(freq1, freq2, dur) {
+            try {
+                const AudioCtx = w.AudioContext || w.webkitAudioContext;
+                if (!AudioCtx) return;
+                if (!w.__skaCtx) w.__skaCtx = new AudioCtx();
+                const ctx = w.__skaCtx;
+                if (ctx.state === 'suspended') ctx.resume();
                 const now = ctx.currentTime;
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq1, now);
+                osc.frequency.exponentialRampToValueAtTime(freq2, now + dur);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.02);
                 osc.connect(gain);
                 gain.connect(ctx.destination);
+                osc.start(now);
+                osc.stop(now + dur + 0.02);
+            } catch(e) {}
+        }
 
-                if (kind === 'node') {{
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(440, now);
-                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.06);
-                    gain.gain.setValueAtTime(0.32, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-                    osc.start(now);
-                    osc.stop(now + 0.08);
-                }} else {{
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(740, now);
-                    osc.frequency.exponentialRampToValueAtTime(980, now + 0.045);
-                    gain.gain.setValueAtTime(0.28, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-                    osc.start(now);
-                    osc.stop(now + 0.06);
-                }}
-            }} catch(e) {{}}
-        }};
-
-        if (!parentWin.__skaAudioEngineReady) {{
-            parentWin.__skaAudioEngineReady = true;
-            ['touchstart', 'touchend', 'click'].forEach(function(evtName) {{
-                doc.addEventListener(evtName, function() {{
-                    parentWin.__ensureMobileAudioUnlocked();
-                }}, {{ passive: true, capture: true }});
-            }});
-
-            doc.addEventListener('click', function(ev) {{
-                const btnPrimary = ev.target.closest('button[kind="primary"]');
-                const anyBtn = ev.target.closest('button');
-                if (btnPrimary) {{
-                    parentWin.sessionStorage.setItem('__skaPendingSound', 'node');
-                    parentWin.__playSkaSound('node');
-                }} else if (anyBtn) {{
-                    parentWin.sessionStorage.setItem('__skaPendingSound', 'action');
-                    parentWin.__playSkaSound('action');
-                }}
-            }}, true);
-        }}
-
-        const pending = parentWin.sessionStorage.getItem('__skaPendingSound');
-        if (pending) {{
-            parentWin.sessionStorage.removeItem('__skaPendingSound');
-            setTimeout(function() {{ parentWin.__playSkaSound(pending); }}, 35);
-        }}
-    }})();
+        d.addEventListener('click', function(ev) {
+            const btnP = ev.target.closest('button[kind="primary"]');
+            const btnS = ev.target.closest('button');
+            if (btnP) playTone(440, 880, 0.06);
+            else if (btnS) playTone(660, 990, 0.04);
+        }, true);
+    })();
     </script>
     """
-    components.html(js, height=0, width=0)
-
-# --- DISEGNO ARCHITETTONICO PURO DEI QUADRATI (SENZA PALLINI VERDI O SCRITTE "5 SOTTOMENU") ---
-def style_architectural_squares(cards_payload):
-    payload_json = json.dumps(cards_payload)
-    js = f"""
-    <script>
-    (function() {{
-        const cards = {payload_json};
-        function paintCleanSquares() {{
-            const doc = window.parent.document;
-            const buttons = doc.querySelectorAll('button[kind="primary"]');
-            buttons.forEach(btn => {{
-                const rawText = (btn.innerText || "").trim();
-                cards.forEach(c => {{
-                    if (rawText === c.name || btn.dataset.sqName === c.name) {{
-                        btn.dataset.sqName = c.name;
-                        btn.style.borderLeft = `4px solid ${{c.accent}}`;
-                        btn.style.borderTop = `2px solid ${{c.accent}}88`;
-                        btn.style.background = c.bg_grad;
-
-                        // Micro-segmenti LED minimali sul fondo del quadrato
-                        let barsHtml = '';
-                        if (c.bars && c.bars.length > 0) {{
-                            c.bars.forEach(bCol => {{
-                                barsHtml += `<span style="display:inline-block;width:16px;height:6px;border-radius:1px;background:${{bCol}};box-shadow:0 0 6px ${{bCol}}88;"></span>`;
-                            }});
-                        }} else {{
-                            for (let i=0; i<5; i++) {{
-                                barsHtml += `<span style="display:inline-block;width:16px;height:4px;border-radius:1px;background:${{c.accent}}55;"></span>`;
-                            }}
-                        }}
-
-                        btn.innerHTML = `
-                        <div style="width:100%;height:178px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;pointer-events:none;">
-                            <div>
-                                <div style="font-family:'Inter',sans-serif;font-size:1.22rem;font-weight:800;color:#ffffff;letter-spacing:0.06em;text-transform:uppercase;">${{c.name}}</div>
-                                <div style="width:32px;height:2px;background:${{c.accent}};margin-top:8px;"></div>
-                            </div>
-                            <div style="display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,0.06);padding-top:10px;">
-                                <div style="display:flex;gap:4px;flex-wrap:wrap;">${{barsHtml}}</div>
-                                <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:${{c.accent}};font-weight:700;letter-spacing:0.05em;">${{c.tag}}</div>
-                            </div>
-                        </div>
-                        `;
-                    }}
-                }});
-            }});
-        }}
-        paintCleanSquares();
-        setTimeout(paintCleanSquares, 80);
-        setTimeout(paintCleanSquares, 280);
-    }})();
-    </script>
-    """
-    components.html(js, height=0, width=0)
+    try:
+        st.html(js_html, unsafe_allow_javascript=True)
+    except Exception:
+        pass
 
 def evaluate_fridge_status(fridge_type, temp_val, is_broken=False):
     if is_broken:
@@ -402,13 +346,13 @@ def evaluate_fridge_status(fridge_type, temp_val, is_broken=False):
 def get_shared_store():
     nodes = [
         {
-            "id": "N00", "name": "DIREZIONE", "accent": "#f59e0b", "bg": "linear-gradient(145deg, #161209 0%, #0d1320 100%)",
+            "id": "N00", "name": "DIREZIONE", "theme": "AMBER",
             "sub_zones": ["Ufficio Direzione", "Amministrazione"],
             "fridges": [],
             "tasks": [{"title": "Verifica Quadro Sinottico", "done": True}]
         },
         {
-            "id": "N01", "name": "PASTICCERIA", "accent": "#10b981", "bg": "linear-gradient(145deg, #071914 0%, #0b1422 100%)",
+            "id": "N01", "name": "PASTICCERIA", "theme": "EMERALD",
             "sub_zones": ["Laboratorio Pasticceria", "Zona Forni"],
             "fridges": [
                 {"name": "Cella Basi +4°C", "kind": "POS"},
@@ -423,7 +367,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N02", "name": "CAMERE", "accent": "#38bdf8", "bg": "linear-gradient(145deg, #081526 0%, #0d182a 100%)",
+            "id": "N02", "name": "CAMERE", "theme": "CYAN",
             "sub_zones": ["Piano 1", "Piano 2", "Office Biancheria"],
             "fridges": [
                 {"name": "Frigo Office Piano 1", "kind": "POS"},
@@ -435,7 +379,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N03", "name": "RECEPTION", "accent": "#38bdf8", "bg": "linear-gradient(145deg, #081526 0%, #0d182a 100%)",
+            "id": "N03", "name": "RECEPTION", "theme": "CYAN",
             "sub_zones": ["Front Desk", "Accoglienza Ospiti"],
             "fridges": [],
             "tasks": [
@@ -444,7 +388,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N04", "name": "SALA COLAZIONI", "accent": "#10b981", "bg": "linear-gradient(145deg, #071914 0%, #0b1422 100%)",
+            "id": "N04", "name": "SALA COLAZIONI", "theme": "EMERALD",
             "sub_zones": ["Buffet Centrale", "Sala Colazioni", "Veranda Colazioni"],
             "fridges": [
                 {"name": "Buffet Freddo Colazioni", "kind": "POS"},
@@ -457,7 +401,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N05", "name": "RISTORANTE", "accent": "#10b981", "bg": "linear-gradient(145deg, #071914 0%, #0b1422 100%)",
+            "id": "N05", "name": "RISTORANTE", "theme": "EMERALD",
             "sub_zones": ["Cucina Centrale", "Sala Interna", "Veranda 1", "Veranda 2", "Veranda Grande", "Veranda Circolare"],
             "fridges": [
                 {"name": "Cella Carne +2°C", "kind": "POS"},
@@ -473,7 +417,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N06", "name": "BAR", "accent": "#10b981", "bg": "linear-gradient(145deg, #071914 0%, #0b1422 100%)",
+            "id": "N06", "name": "BAR", "theme": "EMERALD",
             "sub_zones": ["Banco Caffetteria", "Terrazza Bar", "Cocktail Station"],
             "fridges": [
                 {"name": "Banco Bar 1 (Latte)", "kind": "POS"},
@@ -487,7 +431,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N07", "name": "SPIAGGIA", "accent": "#a855f7", "bg": "linear-gradient(145deg, #150d24 0%, #0c1424 100%)",
+            "id": "N07", "name": "SPIAGGIA", "theme": "PURPLE",
             "sub_zones": ["Gazebo Cerimonie", "Ombrelloni & Tende", "Chiosco Spiaggia"],
             "fridges": [
                 {"name": "Frigo Champagne Gazebo", "kind": "POS"},
@@ -499,7 +443,7 @@ def get_shared_store():
             ]
         },
         {
-            "id": "N08", "name": "PARCHEGGIO", "accent": "#a855f7", "bg": "linear-gradient(145deg, #150d24 0%, #0c1424 100%)",
+            "id": "N08", "name": "PARCHEGGIO", "theme": "PURPLE",
             "sub_zones": ["Ingresso Principale", "Area Sosta Hotel", "Area Sposi"],
             "fridges": [],
             "tasks": [
@@ -536,7 +480,7 @@ def get_shared_store():
     ]
 
     return {
-        "schema_v": "v14_pure_color_squares",
+        "schema_v": "v15_native_fast_css",
         "nodes": nodes,
         "haccp_state": haccp_state,
         "haccp_logs": haccp_logs,
@@ -558,7 +502,7 @@ def get_shared_store():
 
 store = get_shared_store()
 
-if store.get("schema_v") != "v14_pure_color_squares":
+if store.get("schema_v") != "v15_native_fast_css":
     st.cache_resource.clear()
     st.rerun()
 
@@ -616,7 +560,7 @@ pin_input = st.session_state.active_pin
 if pin_input in ["9999", "0000"]:
 
     # --------------------------------------------------------------------------
-    # PIANTA PRINCIPALE: QUADRATI PURI CON CODIFICA COLORE + COLONNA DESTRA
+    # PIANTA PRINCIPALE: QUADRATI PURI CON CODIFICA COLORE NATIVA + COLONNA DESTRA
     # --------------------------------------------------------------------------
     if st.session_state.opened_submenu_node is None:
         tot_fig = len(store["figurine"])
@@ -625,14 +569,6 @@ if pin_input in ["9999", "0000"]:
         tot_nodes = len(store["nodes"])
 
         col_center, col_right = st.columns([3.0, 1.15], gap="small")
-
-        cards_payload = []
-        status_hex = {
-            "GREEN": "#10b981",
-            "PURPLE": "#6b21a8",
-            "YELLOW": "#f59e0b",
-            "RED": "#ef4444"
-        }
 
         with col_center:
             num_rows = (tot_nodes + 2) // 3
@@ -643,6 +579,7 @@ if pin_input in ["9999", "0000"]:
                     if idx < tot_nodes:
                         node = store["nodes"][idx]
                         nid = node["id"]
+                        theme = node.get("theme", "EMERALD")
                         with row_cols[c_idx]:
                             if st.session_state.expanded_node_id == nid:
                                 if nid == "N00":
@@ -672,30 +609,10 @@ if pin_input in ["9999", "0000"]:
                                     st.session_state.expanded_node_id = None
                                     st.rerun()
                             else:
-                                n_fr = [v for v in store["haccp_state"].values() if v["node_id"] == nid]
-                                n_st = len([f for f in store["figurine"] if f["node_id"] == nid])
-                                bars = [status_hex[f["status"]] for f in n_fr]
-                                if nid == "N00":
-                                    tag_txt = "MASTER"
-                                elif n_fr:
-                                    ok_c = sum(1 for f in n_fr if f["status"] == "GREEN")
-                                    tag_txt = f"{ok_c}/{len(n_fr)}"
-                                else:
-                                    tag_txt = f"0{n_st}" if n_st > 0 else "—"
-
-                                cards_payload.append({
-                                    "name": node["name"],
-                                    "accent": node.get("accent", "#10b981"),
-                                    "bg_grad": node.get("bg", "linear-gradient(145deg, #071914 0%, #0b1422 100%)"),
-                                    "bars": bars,
-                                    "tag": tag_txt
-                                })
-
-                                if st.button(node["name"], key=f"sq_{nid}", type="primary", use_container_width=True):
+                                # SOLO IL NOME PURO DEL QUADRATO (NESSUN PALLINO VERDE O SCRITTA SOTTO)
+                                if st.button(node["name"], key=f"sq_{theme}_{nid}", type="primary", use_container_width=True):
                                     st.session_state.expanded_node_id = nid
                                     st.rerun()
-
-            style_architectural_squares(cards_payload)
 
         # RETTANGOLO VERTICALE DI RIEPILOGO A DESTRA
         with col_right:
@@ -762,18 +679,17 @@ if pin_input in ["9999", "0000"]:
                 ns_name = c_n1.text_input("Nome Nuovo Quadrato (es. PISCINA / SPA / CANTINA)")
                 ns_col = c_n2.selectbox("Colore Area", ["Verde Smeraldo (F&B)", "Blu Ciano (Camere/Ospiti)", "Viola Indaco (Esterni)", "Oro Ambra (Direzione)"])
                 col_map = {
-                    "Verde Smeraldo (F&B)": ("#10b981", "linear-gradient(145deg, #071914 0%, #0b1422 100%)"),
-                    "Blu Ciano (Camere/Ospiti)": ("#38bdf8", "linear-gradient(145deg, #081526 0%, #0d182a 100%)"),
-                    "Viola Indaco (Esterni)": ("#a855f7", "linear-gradient(145deg, #150d24 0%, #0c1424 100%)"),
-                    "Oro Ambra (Direzione)": ("#f59e0b", "linear-gradient(145deg, #161209 0%, #0d1320 100%)")
+                    "Verde Smeraldo (F&B)": "EMERALD",
+                    "Blu Ciano (Camere/Ospiti)": "CYAN",
+                    "Viola Indaco (Esterni)": "PURPLE",
+                    "Oro Ambra (Direzione)": "AMBER"
                 }
                 if st.button("➕ CREA NUOVO QUADRATO NELLA GRIGLIA", type="secondary"):
                     if ns_name:
-                        acc, bg_g = col_map[ns_col]
                         store["nodes"].append({
                             "id": f"N{int(datetime.now().timestamp())}",
                             "name": ns_name.strip().upper(),
-                            "accent": acc, "bg": bg_g,
+                            "theme": col_map[ns_col],
                             "sub_zones": ["Zona 1"],
                             "fridges": [],
                             "tasks": [{"title": "Controllo Apertura", "done": False}]
